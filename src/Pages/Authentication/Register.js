@@ -3,6 +3,7 @@ import { Container } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { useNavigate } from "react-router-dom";
+import { register } from "../../Components/AuthenticationHandler";
 
 export default function RegisterPage() {
   const navigate = useNavigate();
@@ -12,27 +13,11 @@ export default function RegisterPage() {
     password: "",
   });
 
-  const createNewAccount = () => {
-    fetch("https://127.0.0.1:8000/api/auth/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(value),
-    })
-      .then((response) => response.json())
-      .then((msg) => {
-        console.log("Success:", msg);
-        navigate("/login");
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-  };
-
   const hanldeSubmit = (evt) => {
     evt.preventDefault();
-    createNewAccount();
+    register(value.name, value.email, value.password, () => {
+      navigate("/login");
+    });
   };
 
   return (

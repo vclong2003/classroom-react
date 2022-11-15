@@ -2,27 +2,17 @@ import { useState } from "react";
 import { Container } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
+import { useNavigate } from "react-router-dom";
+import { login } from "../../Components/AuthenticationHandler";
 
 export default function LoginPage() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const hanldeSubmit = (evt) => {
     evt.preventDefault();
-    fetch("https://127.0.0.1:8000/api/auth/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email: email, password: password }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    login(email, password);
   };
 
   return (
@@ -47,6 +37,15 @@ export default function LoginPage() {
               setPassword(evt.target.value);
             }}
           />
+        </Form.Group>
+        <Form.Group className="mb-3">
+          <Form.Text
+            onClick={() => {
+              navigate("/register");
+            }}
+          >
+            Or, create an account!
+          </Form.Text>
         </Form.Group>
         <Button
           variant="primary"

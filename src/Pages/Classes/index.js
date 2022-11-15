@@ -3,7 +3,7 @@ import Card from "react-bootstrap/Card";
 import { Button, Col, Container, Image, Row } from "react-bootstrap";
 import Badge from "react-bootstrap/Badge";
 
-export default function HomePage() {
+export default function Classes() {
   return (
     <Container>
       <Row>
