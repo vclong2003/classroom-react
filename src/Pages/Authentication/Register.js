@@ -2,8 +2,10 @@ import { useState } from "react";
 import { Container } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
+import { useNavigate } from "react-router-dom";
 
 export default function RegisterPage() {
+  const navigate = useNavigate();
   const [value, setValue] = useState({
     name: "",
     email: "",
@@ -11,7 +13,7 @@ export default function RegisterPage() {
   });
 
   const createNewAccount = () => {
-    fetch("https://635d3190cb6cf98e56af2a5f.mockapi.io/api/v2/user", {
+    fetch("https://127.0.0.1:8000/api/auth/register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -19,8 +21,9 @@ export default function RegisterPage() {
       body: JSON.stringify(value),
     })
       .then((response) => response.json())
-      .then((data) => {
-        console.log("Success:", data);
+      .then((msg) => {
+        console.log("Success:", msg);
+        navigate("/login");
       })
       .catch((error) => {
         console.error("Error:", error);

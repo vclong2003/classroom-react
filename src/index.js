@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import NavBar from "./Components/NavBar";
 import LoginPage from "./Pages/Authentication/Login";
 import RegisterPage from "./Pages/Authentication/Register";
+import HomePage from "./Pages/Home";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -12,6 +13,7 @@ root.render(
     <NavBar />
     <Router>
       <Routes>
+        <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
       </Routes>

@@ -9,7 +9,20 @@ export default function LoginPage() {
 
   const hanldeSubmit = (evt) => {
     evt.preventDefault();
-    console.log(email + " " + password);
+    fetch("https://127.0.0.1:8000/api/auth/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email: email, password: password }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (
