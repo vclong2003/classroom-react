@@ -1,4 +1,20 @@
-import { Navigate, useNavigate } from "react-router-dom";
+export function verifySessionId() {
+  if (localStorage.getItem("sessionId")) {
+    fetch("https://127.0.0.1:8000/api/auth", {
+      method: "HEAD",
+      headers: {
+        "Content-Type": "application/json",
+        sessionId: localStorage.getItem("sessionId"),
+      },
+    }).then((response) => {
+      // 202: verified, 406: not verified
+      if (response.status !== 202) {
+        localStorage.clear();
+        window.location.href = "/";
+      }
+    });
+  }
+}
 
 export function login(email, password) {
   fetch("https://127.0.0.1:8000/api/auth/login", {

@@ -11,6 +11,7 @@ import NavBar from "./Components/NavBar";
 import LoginPage from "./Pages/Authentication/Login";
 import RegisterPage from "./Pages/Authentication/Register";
 import Classes from "./Pages/Classes";
+import { verifySessionId } from "./Services/SymfonyApi/AuthHandler";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -19,48 +20,12 @@ root.render(
   </React.StrictMode>
 );
 
-function PrivateRoute({ children }) {
-  return localStorage.getItem("sessionId") ? (
-    children
-  ) : (
-    <Navigate to="/login" />
-  );
-}
-
-const userContext = createContext();
 function App() {
-  const [user, setUser] = useState(null);
   useEffect(() => {
-    if (localStorage.getItem("sessionId")) {
-      fetch("https://127.0.0.1:8000/api/auth/verifySessionId", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          sessionId: localStorage.getItem("sessionId"),
-        },
-      })
-        .then((response) => {
-          console.log(response.status); // 202: verified, 406: not verified
-          if (response.status === 202) {
-            return response.json();
-          } else {
-            <Navigate to="/" />;
-            localStorage.clear();
-            setUser(null);
-          }
-        })
-        .then((data) => {
-          if (data) {
-            setUser(data);
-          }
-        })
-        .catch((err) => {
-          console.log("Error: " + err);
-        });
-    }
+    verifySessionId();
   }, []);
   return (
-    <userContext.Provider value={user}>
+    <>
       <NavBar />
       <Router>
         <Routes>
@@ -76,7 +41,15 @@ function App() {
           <Route path="/register" element={<RegisterPage />} />
         </Routes>
       </Router>
-    </userContext.Provider>
+    </>
+  );
+}
+
+function PrivateRoute({ children }) {
+  return localStorage.getItem("sessionId") ? (
+    children
+  ) : (
+    <Navigate to="/login" />
   );
 }
 
