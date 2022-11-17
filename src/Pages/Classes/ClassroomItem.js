@@ -7,18 +7,22 @@ export default function ClassroomItem({ classroom }) {
   return (
     <Col xl={4} xxl={4}>
       <Card bg="light">
-        <Card.Header>WEBG301</Card.Header>
+        <Card.Header>{classroom.name}</Card.Header>
         <Card.Body>
           <Row>
             <Col xl={3} xxl={3}>
               <Image
-                src={require("../../Assets/userPlaceholder.jpg")}
+                src={
+                  classroom.teacherImageUrl
+                    ? classroom.teacherImageUrl
+                    : require("../../Assets/userPlaceholder.jpg")
+                }
                 roundedCircle
                 fluid
               />
             </Col>
             <Col xl={8} xxl={9}>
-              Nguyễn Đình Trần Long
+              {classroom.teacherName}
             </Col>
           </Row>
         </Card.Body>
