@@ -3,19 +3,18 @@ import Card from "react-bootstrap/Card";
 import { Button, Col, Container, Form, Image, Row } from "react-bootstrap";
 import Modal from "react-bootstrap/Modal";
 import Badge from "react-bootstrap/Badge";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { getRole } from "../../Services/SymfonyApi/UserHandler";
 import {
   addClassroom,
   getClassroom,
 } from "../../Services/SymfonyApi/ClassHandler";
 import ClassroomItem from "./ClassroomItem";
-import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
+import { Routes, Route, Navigate, useNavigate, Outlet } from "react-router-dom";
 import LoginPage from "../Authentication/Login";
 import ClassDetail from "./ClassDetail";
 
 export default function Classes() {
-  const navigate = useNavigate();
   const [role, setRole] = useState("student");
   const [showAddModal, setShowAddModal] = useState(false);
   const [classroomList, setClassroomList] = useState([]);
@@ -33,48 +32,48 @@ export default function Classes() {
     });
   }
 
+  function AllClass() {
+    return (
+      <Container>
+        {role === "teacher" ? (
+          <Container>
+            <Button
+              onClick={() => {
+                setShowAddModal(true);
+              }}
+            >
+              Add class
+            </Button>
+          </Container>
+        ) : (
+          ""
+        )}
+        <Row>
+          {/* RENDER CLASSROOM ITEMS HERE */}
+          {classroomList.map((item, index) => {
+            return <ClassroomItem classroom={item} key={index} />;
+          })}
+        </Row>
+        {role === "teacher" ? (
+          <AddClass
+            isVisible={showAddModal}
+            handleClose={() => {
+              setShowAddModal(false);
+            }}
+            addedCallback={() => {
+              fetchClassroomList();
+            }}
+          />
+        ) : (
+          ""
+        )}
+      </Container>
+    );
+  }
+
   return (
     <Routes>
-      <Route path="/" element={<Navigate to="all" />} />
-      <Route
-        path="all"
-        element={
-          <Container>
-            {role === "teacher" ? (
-              <Container>
-                <Button
-                  onClick={() => {
-                    setShowAddModal(true);
-                  }}
-                >
-                  Add class
-                </Button>
-              </Container>
-            ) : (
-              ""
-            )}
-            <Row>
-              {/* RENDER CLASSROOM ITEMS HERE */}
-              {classroomList.map((item, index) => {
-                return <ClassroomItem classroom={item} key={index} />;
-              })}
-            </Row>
-            {role === "teacher" ? (
-              <AddClass
-                isVisible={showAddModal}
-                handleClose={() => {
-                  setShowAddModal(false);
-                }}
-                addedCallback={() => {
-                  fetchClassroomList();
-                }}
-              />
-            ) : (
-              ""
-            )}
-          </Container>
-        }
-      />
+      <Route path="" element={<AllClass />} />
       <Route path=":classId" element={<ClassDetail />} />
     </Routes>
   );
