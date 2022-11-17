@@ -1,0 +1,13 @@
+.commentBody {
+  display: -webkit-box;
+  /* max-height: 200px;
+  -webkit-line-clamp: 3; */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.commentBodyCollapse {
+  max-height: 200px;
+  -webkit-line-clamp: 3;
+  cursor: pointer;
+}

@@ -12,7 +12,7 @@ import {
 import ClassroomItem from "./ClassroomItem";
 import { Routes, Route, Navigate, useNavigate, Outlet } from "react-router-dom";
 import LoginPage from "../Authentication/Login";
-import ClassDetail from "./ClassDetail";
+import ClassDetail from "../ClassDetail";
 
 export default function Classes() {
   const [role, setRole] = useState("student");
