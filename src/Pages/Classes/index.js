@@ -1,17 +1,14 @@
 import styles from "./style.module.css";
-import Card from "react-bootstrap/Card";
-import { Button, Col, Container, Form, Image, Row } from "react-bootstrap";
+import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import Modal from "react-bootstrap/Modal";
-import Badge from "react-bootstrap/Badge";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { getRole } from "../../Services/SymfonyApi/UserHandler";
 import {
   addClassroom,
   getClassroom,
 } from "../../Services/SymfonyApi/ClassHandler";
 import ClassroomItem from "./ClassroomItem";
-import { Routes, Route, Navigate, useNavigate, Outlet } from "react-router-dom";
-import LoginPage from "../Authentication/Login";
+import { Routes, Route } from "react-router-dom";
 import ClassDetail from "../ClassDetail";
 
 export default function Classes() {
@@ -35,6 +32,15 @@ export default function Classes() {
   function AllClass() {
     return (
       <Container>
+        <Row>
+          <Col xl={10} xxl={10}>
+            <Form.Control type="text" />
+          </Col>
+          <Col xl={2} xxl={2}>
+            <Button>Search</Button>
+          </Col>
+        </Row>
+        {/* TEACHER ADD BTN */}
         {role === "teacher" ? (
           <Container>
             <Button
@@ -51,7 +57,16 @@ export default function Classes() {
         <Row>
           {/* RENDER CLASSROOM ITEMS HERE */}
           {classroomList.map((item, index) => {
-            return <ClassroomItem classroom={item} key={index} />;
+            return (
+              <ClassroomItem
+                classroom={item}
+                key={index}
+                role={role}
+                addStudentCallback={() => {
+                  fetchClassroomList();
+                }}
+              />
+            );
           })}
         </Row>
         {role === "teacher" ? (

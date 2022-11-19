@@ -1,11 +1,37 @@
 import styles from "./style.module.css";
 import Card from "react-bootstrap/Card";
-import { Button, Col, Container, Image, Row } from "react-bootstrap";
-import Badge from "react-bootstrap/Badge";
-import { Link, useNavigate } from "react-router-dom";
+import { Button, Col, Image, Row } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import { addStudent } from "../../Services/SymfonyApi/ClassHandler";
 
-export default function ClassroomItem({ classroom }) {
+export default function ClassroomItem({ classroom, role, addStudentCallback }) {
   const navigate = useNavigate();
+
+  function AuthorizedBtn() {
+    if (role === "teacher" || classroom.isJoined) {
+      return (
+        <Button
+          onClick={() => {
+            navigate(`${classroom.id}`);
+          }}
+        >
+          Open
+        </Button>
+      );
+    } else {
+      return (
+        <Button
+          onClick={() => {
+            addStudent(classroom.id, () => {
+              addStudentCallback();
+            });
+          }}
+        >
+          Join
+        </Button>
+      );
+    }
+  }
 
   return (
     <Col xl={4} xxl={4}>
@@ -30,13 +56,8 @@ export default function ClassroomItem({ classroom }) {
           </Row>
         </Card.Body>
         <Card.Footer>
-          <Button
-            onClick={() => {
-              navigate(`${classroom.id}`);
-            }}
-          >
-            Open
-          </Button>
+          {/* BTN HERE */}
+          <AuthorizedBtn />
         </Card.Footer>
       </Card>
     </Col>

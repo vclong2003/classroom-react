@@ -29,6 +29,7 @@ function App() {
       <NavBar />
       <Router>
         <Routes>
+          <Route path="/" element={<Navigate to="/class" />} />
           <Route
             path="/class/*"
             element={
