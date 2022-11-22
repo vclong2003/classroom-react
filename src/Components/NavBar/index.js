@@ -4,23 +4,34 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import { logout } from "../../Services/SymfonyApi/AuthHandler";
+import { Button, Form } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
 export default function NavBar() {
+  const navigate = useNavigate();
+
   return (
-    <Navbar bg="light" expand="lg">
+    <Navbar expand="lg" variant="dark" className={styles.navBar}>
       <Container>
-        <Navbar.Brand href="/">React-boostrap</Navbar.Brand>
+        <Navbar.Brand href="/" className={styles.logo}>
+          VCL
+        </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto">
-            <Nav.Link href="#home">Home</Nav.Link>
-            <Nav.Link href="#link">Link</Nav.Link>
-            <NavDropdown title="Dropdown">
+          <Nav className={styles.nav}>
+            <Nav.Link
+              onClick={() => {
+                navigate("/class");
+              }}
+              className={styles.navLink}
+            >
+              Classes
+            </Nav.Link>
+            <Nav.Link href="/#" className={styles.navLink}>
+              Link
+            </Nav.Link>
+            <NavDropdown title="Dropdown" className={styles.navLink}>
               <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.2">
-                Another action
-              </NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
               <NavDropdown.Divider />
               <NavDropdown.Item
                 onClick={() => {

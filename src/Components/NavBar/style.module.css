@@ -1,0 +1,18 @@
+.navBar {
+  background-color: #545382;
+}
+.nav {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+.logo {
+  font-size: 28px;
+  font-weight: 800;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-style: italic;
+}
+.navLink {
+  font-size: 18px;
+  font-weight: 400;
+}

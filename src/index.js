@@ -27,8 +27,8 @@ function App() {
 
   return (
     <>
-      <NavBar />
       <Router>
+        <NavBar />
         <Routes>
           <Route path="/" element={<Navigate to="/class" />} />
           <Route

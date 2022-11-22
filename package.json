@@ -9,6 +9,8 @@
     "bootstrap-icons": "^1.10.1",
     "firebase": "^9.14.0",
     "framer-motion": "^7.6.6",
+    "random-gradient": "^0.0.2",
+    "randomcolor": "^0.6.2",
     "react": "^18.2.0",
     "react-bootstrap": "^2.6.0",
     "react-dom": "^18.2.0",
