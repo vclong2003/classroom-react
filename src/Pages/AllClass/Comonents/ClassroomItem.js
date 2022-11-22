@@ -2,7 +2,7 @@ import styles from "./style.module.css";
 import Card from "react-bootstrap/Card";
 import { Button, Col, Image, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { addStudent } from "../../Services/SymfonyApi/ClassHandler";
+import { addStudent } from "../../../Services/SymfonyApi/ClassHandler";
 
 export default function ClassroomItem({ classroom, role, addStudentCallback }) {
   const navigate = useNavigate();
