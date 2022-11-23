@@ -1,8 +1,16 @@
-import { Button, Col, Container, Form, Image, Row } from "react-bootstrap";
+import {
+  Button,
+  Col,
+  Container,
+  Form,
+  Image,
+  Row,
+  Spinner,
+} from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import Accordion from "react-bootstrap/Accordion";
 import RichTextEditor from "../../Components/RichTextEditor";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import Card from "react-bootstrap/Card";
 import styles from "./style.module.css";
 import Tab from "react-bootstrap/Tab";
@@ -13,10 +21,12 @@ import {
   getStudentList,
 } from "../../Services/SymfonyApi/ClassHandler";
 
-export default function ClassDetail() {
+export default function ClassDetail({ role }) {
+  const params = useParams();
+
+  const [loading, setLoading] = useState(false);
   const [classInfo, setClassInfo] = useState({});
   const [studentList, setStudentList] = useState();
-  const params = useParams();
 
   useEffect(() => {
     getClassDetail(params.classId, (info) => {
@@ -26,8 +36,8 @@ export default function ClassDetail() {
   }, []);
 
   return (
-    <Container>
-      <Container fluid>
+    <Container fluid className={styles.container}>
+      <Container className={styles.classInfoContainer}>
         <Row>
           <h1>{classInfo.name}</h1>
         </Row>
@@ -173,15 +183,6 @@ function PostItem() {
         <Form.Control />
         <Button>Send</Button>
       </Container>
-      <Container fluid>
-        {/* RENDER COMMENTS HERE */}
-        <Card>
-          <Card.Body>This is some text within a card body.</Card.Body>
-        </Card>
-        <Card>
-          <Card.Body>This is some text within a card body.</Card.Body>
-        </Card>
-      </Container>
     </Card>
   );
 }
@@ -218,5 +219,21 @@ function PostAdder() {
         </Accordion.Body>
       </Accordion.Item>
     </Accordion>
+  );
+}
+
+function LoadingSpinner() {
+  return (
+    <Container
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        marginTop: "60px",
+        marginBottom: "60px",
+      }}
+    >
+      <Spinner animation="border" />
+    </Container>
   );
 }

@@ -42,7 +42,7 @@ export default function ClassroomItem({
       <Container
         className={styles.top}
         style={{
-          backgroundColor: randomColor({ luminosity: "light", hue: "random" }),
+          backgroundColor: randomColor({ luminosity: "light"}),
         }}
       >
         <Row className={styles.teacherInfoContainer}>

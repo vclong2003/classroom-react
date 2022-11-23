@@ -72,7 +72,7 @@ export function getClassDetail(classId, callback) {
   }
 }
 
-export function addStudent(classId, callback) {
+export function joinClass(classId, callback) {
   if (localStorage.getItem("sessionId")) {
     fetch(`https://127.0.0.1:8000/api/classroom/${classId}/student`, {
       method: "POST",
