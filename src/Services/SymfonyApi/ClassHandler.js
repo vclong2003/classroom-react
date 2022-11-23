@@ -20,9 +20,9 @@ export function addClassroom(classroomName, callback) {
   }
 }
 
-export function getClassrooms(callback) {
+export function getClassrooms(searchVal, callback) {
   if (localStorage.getItem("sessionId")) {
-    fetch("https://127.0.0.1:8000/api/classroom", {
+    fetch(`https://127.0.0.1:8000/api/classroom/?searchVal=${searchVal}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

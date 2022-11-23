@@ -5,9 +5,12 @@ import { getRole } from "../../Services/SymfonyApi/AuthHandler";
 import styles from "./style.module.css";
 import { Button, Container, Form } from "react-bootstrap";
 import Modal from "react-bootstrap/Modal";
-import ClassroomItem from "./Components/ClassroomItem";
+import ClassroomItem from "./ClassroomItem";
 import { motion } from "framer-motion";
-import { getClassrooms } from "../../Services/SymfonyApi/ClassHandler";
+import {
+  addClassroom,
+  getClassrooms,
+} from "../../Services/SymfonyApi/ClassHandler";
 
 export default function AllClassPage() {
   const [role, setRole] = useState(null);
@@ -31,37 +34,39 @@ export default function AllClassPage() {
   );
 }
 
-function LoadingSpinner() {
-  return (
-    <Container
-      style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        marginTop: "50px",
-      }}
-    >
-      <Spinner animation="border" />
-    </Container>
-  );
-}
-
 function AuthorizedPage({ role }) {
-  const [showAddModal, setShowAddModal] = useState(false);
+  const [addClassModalVisible, setAddClassModalVisible] = useState(false);
   const [classroomList, setClassroomList] = useState([]);
+  const [loadingClassList, setLoadingClassList] = useState(false);
+  const [searchVal, setSearchVal] = useState("");
 
-  function getClassroomList() {
-    getClassrooms((data) => {
+  const getClassroomList = () => {
+    setClassroomList([]);
+    setLoadingClassList(true);
+    getClassrooms(searchVal, (data) => {
       console.log(data);
+      setLoadingClassList(false);
       setClassroomList(data);
     });
-  }
+  };
 
-  function handleOpenClass(id) {}
+  const handleAddClass = (className) => {
+    addClassroom(className, () => {
+      getClassroomList();
+    });
+  };
+
+  const handleOpenClass = (id) => {
+    console.log("open " + id);
+  };
+
+  const handleJoinClass = (id) => {
+    console.log("join " + id);
+  };
 
   useEffect(() => {
     getClassroomList();
-  }, []);
+  }, [searchVal]);
 
   return (
     <Container fluid className={styles.container}>
@@ -70,57 +75,137 @@ function AuthorizedPage({ role }) {
           type="text"
           placeholder="Enter class name to search..."
           className={styles.searchInput}
-        />
-        <Button className={styles.searchBtn}>Search</Button>
-      </Container>
-      <Container className={styles.classItemsContainer}>
-        <motion.div
-          initial={{ borderRadius: "10px" }}
-          whileHover={{
-            rotate: 180,
+          value={searchVal}
+          onChange={(evt) => {
+            setSearchVal(evt.target.value);
           }}
-          whileTap={{ scale: 0.8 }}
-          className={styles.addBtn}
-        >
-          <i className="bi bi-plus-circle"></i>
-        </motion.div>
-        {/* RENDER CLASSROOM ITEMS HERE */}
-        <ClassroomItem />
-        <ClassroomItem />
-        <ClassroomItem />
-        <ClassroomItem />
-        <ClassroomItem />
-      </Container>
-      <Modal
-        show={showAddModal}
-        onHide={() => {
-          setShowAddModal(false);
-        }}
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>Add class</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form.Control
-            type="text"
-            placeholder="Class name"
-            onChange={(evt) => {}}
-          />
-        </Modal.Body>
-        <Modal.Footer>
+        />
+        {searchVal == "" ? (
+          ""
+        ) : (
           <Button
-            variant="secondary"
+            className={styles.searchBtn}
             onClick={() => {
-              setShowAddModal(false);
+              setSearchVal("");
             }}
           >
             Cancel
           </Button>
-          <Button variant="primary" onClick={() => {}}>
+        )}
+      </Container>
+      <Container className={styles.classItemsContainer}>
+        {loadingClassList ? (
+          <LoadingSpinner />
+        ) : role === "teacher" ? (
+          <motion.div
+            initial={{ borderRadius: "10px" }}
+            whileHover={{
+              rotate: 180,
+            }}
+            whileTap={{ scale: 0.8 }}
+            className={styles.addBtn}
+            onClick={() => {
+              setAddClassModalVisible(true);
+            }}
+          >
+            <i className="bi bi-plus-circle"></i>
+          </motion.div>
+        ) : (
+          ""
+        )}
+
+        {/* RENDER CLASSROOM ITEMS HERE */}
+        {classroomList.map((item, index) => {
+          return (
+            <ClassroomItem
+              classInfo={item}
+              key={index}
+              role={role}
+              joinCallBack={(id) => {
+                handleJoinClass(id);
+              }}
+              openCallBack={(id) => {
+                handleOpenClass(id);
+              }}
+            />
+          );
+        })}
+      </Container>
+      {role === "teacher" ? (
+        <AddClassModal
+          visible={addClassModalVisible}
+          cancelCallback={() => {
+            setAddClassModalVisible(false);
+          }}
+          addCallback={(className) => {
+            setAddClassModalVisible(false);
+            handleAddClass(className);
+          }}
+        />
+      ) : (
+        ""
+      )}
+    </Container>
+  );
+}
+
+function LoadingSpinner() {
+  return (
+    <Container
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        marginTop: "60px",
+        marginBottom: "60px",
+      }}
+    >
+      <Spinner animation="border" />
+    </Container>
+  );
+}
+
+function AddClassModal({ visible, cancelCallback, addCallback }) {
+  const [className, setClassName] = useState("");
+
+  return (
+    <Modal
+      show={visible}
+      onHide={() => {
+        cancelCallback();
+      }}
+    >
+      <Modal.Body className={styles.addModal}>
+        <Form.Control
+          type="text"
+          placeholder="Enter class name..."
+          onChange={(evt) => {
+            setClassName(evt.target.value);
+          }}
+          className={styles.addModalInput}
+        />
+        <Container fluid>
+          <Button
+            variant="secondary"
+            onClick={() => {
+              cancelCallback();
+            }}
+            className={styles.addModalBtn}
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="primary"
+            onClick={() => {
+              addCallback(className);
+            }}
+            className={styles.addModalBtn}
+            style={{ backgroundColor: "#545382", color: "white" }}
+          >
             Add
           </Button>
-        </Modal.Footer>
-      </Modal>
-    </Container>
+        </Container>
+      </Modal.Body>
+    </Modal>
   );
 }
