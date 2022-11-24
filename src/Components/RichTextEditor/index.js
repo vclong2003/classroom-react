@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import PropTypes from "prop-types";
+import styles from "./style.module.css";
 
 export default function RichTextEditor({ onChangeCallback }) {
   const [value, setValue] = useState("");
@@ -21,6 +22,7 @@ export default function RichTextEditor({ onChangeCallback }) {
   return (
     <ReactQuill
       theme="snow"
+      className={styles.container}
       value={value}
       onChange={setValue}
       modules={{

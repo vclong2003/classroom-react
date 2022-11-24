@@ -101,12 +101,13 @@
   display: flex;
   justify-content: space-between;
 }
-.assignmentWarning {
+.asmBadge {
   font-size: 16px;
   font-weight: 500;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   margin-bottom: 10px;
   text-align: center;
+  margin-right: 6px;
 }
 .postTime {
   color: rgba(0, 0, 0, 0.705);
@@ -136,4 +137,9 @@
   margin-left: 15px;
   cursor: pointer;
   color: #666690;
+}
+
+.teacherInfoModalBtnContainer {
+  display: flex;
+  justify-content: flex-end;
 }

@@ -14,7 +14,13 @@ import {
 import ListGroup from "react-bootstrap/ListGroup";
 import Accordion from "react-bootstrap/Accordion";
 
-import { useParams } from "react-router-dom";
+import {
+  Navigate,
+  Route,
+  Routes,
+  useNavigate,
+  useParams,
+} from "react-router-dom";
 import { useEffect, useState } from "react";
 
 import PostItem from "./postItem";
@@ -22,9 +28,11 @@ import RichTextEditor from "../../Components/RichTextEditor";
 import { getClassDetail } from "../../Services/SymfonyApi/ClassHandler";
 import { readableDateTimeConvert } from "../../Components/ReadableDateTimeConverter";
 import { getPosts } from "../../Services/SymfonyApi/PostHandler";
+import AddPostPage from "../AddPost";
 
 export default function ClassDetail({ role }) {
   const params = useParams();
+  const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
   const [classInfo, setClassInfo] = useState({
@@ -38,20 +46,25 @@ export default function ClassDetail({ role }) {
     teacherEmail: "",
     teacherPhoneNumber: "",
   });
-  const [postData, setPostData] = useState([]);
+  const [postList, setPostList] = useState([]);
+
   const [teacherInfoModalVisible, setTeacherInfoModalVisible] = useState(false);
+  const [pageLoading, setPageLoading] = useState(false);
+  const [postLoading, setPostLoading] = useState(false);
 
   const fetchClassDetail = () => {
+    setPageLoading(true);
     getClassDetail(params.classId, (info) => {
       setClassInfo(info);
-      // console.log(info);
-      // console.log(role);
+      setPageLoading(false);
     });
   };
 
   const fetchPosts = () => {
+    setPostLoading(true);
     getPosts(params.classId, (data) => {
-      console.log(data);
+      setPostList(data);
+      setPostLoading(false);
     });
   };
 
@@ -60,7 +73,9 @@ export default function ClassDetail({ role }) {
     fetchPosts();
   }, []);
 
-  return (
+  const authorizedContent = pageLoading ? (
+    <LoadingSpinner />
+  ) : (
     <Container fluid className={styles.container}>
       <Container className={styles.classInfoContainer}>
         <Row className={styles.className}>{classInfo.name}</Row>
@@ -111,15 +126,28 @@ export default function ClassDetail({ role }) {
           ""
         )}
       </Container>
-      <Container>
-        {/* RENDER POST ITEMS HERE */}
-        <PostItem />
-        <PostItem />
-        <PostItem />
-      </Container>
-      <Button className={styles.addPostBtn}>
-        <i className="bi bi-pencil-square"></i>
-      </Button>
+      {postLoading ? (
+        <LoadingSpinner />
+      ) : (
+        <Container>
+          {/* RENDER POST ITEMS HERE */}
+          {postList.map((item, index) => {
+            return <PostItem data={item} role={role} key={index} />;
+          })}
+        </Container>
+      )}
+      {role === "teacher" ? (
+        <Button
+          className={styles.addPostBtn}
+          onClick={() => {
+            navigate("post");
+          }}
+        >
+          <i className="bi bi-pencil-square"></i>
+        </Button>
+      ) : (
+        ""
+      )}
       <TeacherInfoModal
         teacherInfo={{
           teacherEmail: classInfo.teacherEmail,
@@ -132,6 +160,32 @@ export default function ClassDetail({ role }) {
         }}
       />
     </Container>
+  );
+
+  return (
+    <Routes>
+      <Route
+        path=""
+        element={role == null ? <LoadingSpinner /> : authorizedContent}
+      />
+      <Route
+        path="post/*"
+        element={
+          role == null ? (
+            <LoadingSpinner />
+          ) : role === "teacher" ? (
+            <AddPostPage />
+          ) : (
+            <Navigate to="/" />
+          )
+        }
+      />
+
+      {/* <Route
+        path="post/:id/assignmentSubmit"
+        element={<Container>Test</Container>}
+      /> */}
+    </Routes>
   );
 }
 
@@ -152,22 +206,40 @@ function TeacherInfoModal({
       }}
       centered
     >
-      <Modal.Body>
-        <Container>
+      <Modal.Body style={{ paddingBottom: "18px", paddingTop: "18px" }}>
+        <Container className={styles.teacherInfoModalBtnContainer}>
           <CloseButton
             onClick={() => {
               closeCallback();
             }}
           />
         </Container>
-        <Container>
+        <Container className={styles.teacherInfoModalContent}>
           <h5>Teacher contact infomation:</h5>
-          <p>{teacherInfo.teacherName}</p>
-          <p>Email: {teacherInfo.teacherEmail}</p>
-          <p>Phone number: {teacherInfo.teacherPhoneNumber}</p>
+          {teacherInfo.teacherName}
+          <br />
+          Email: {teacherInfo.teacherEmail}
+          <br />
+          Phone number: {teacherInfo.teacherPhoneNumber}
         </Container>
       </Modal.Body>
     </Modal>
+  );
+}
+
+function LoadingSpinner() {
+  return (
+    <Container
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        marginTop: "60px",
+        marginBottom: "60px",
+      }}
+    >
+      <Spinner animation="border" />
+    </Container>
   );
 }
 
@@ -206,55 +278,5 @@ function StudentItem() {
         </Col>
       </Row>
     </ListGroup.Item>
-  );
-}
-function PostAdder() {
-  const [postContent, setPostContent] = useState("");
-
-  return (
-    <Accordion>
-      <Accordion.Item eventKey="0">
-        <Accordion.Header>
-          <Row>
-            <Col xl={1} xxl={1}>
-              <Image
-                src={require("../../Assets/userPlaceholder.jpg")}
-                fluid
-                roundedCircle
-              />
-            </Col>
-            <Col xl={11} xxl={11}>
-              Post something to your class
-            </Col>
-          </Row>
-        </Accordion.Header>
-        <Accordion.Body>
-          <RichTextEditor
-            onChangeCallback={(value) => {
-              setPostContent(value);
-            }}
-          />
-          <Container>
-            <Button>Save</Button>
-          </Container>
-        </Accordion.Body>
-      </Accordion.Item>
-    </Accordion>
-  );
-}
-
-function LoadingSpinner() {
-  return (
-    <Container
-      style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        marginTop: "60px",
-        marginBottom: "60px",
-      }}
-    >
-      <Spinner animation="border" />
-    </Container>
   );
 }

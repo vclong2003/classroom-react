@@ -151,7 +151,7 @@ export default function AllClassPage() {
         path=""
         element={role == null ? <LoadingSpinner /> : authorizedContent}
       />
-      <Route path=":classId" element={<ClassDetail role={role} />} />
+      <Route path=":classId/*" element={<ClassDetail role={role} />} />
     </Routes>
   );
 }
