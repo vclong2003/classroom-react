@@ -28,7 +28,7 @@ export default function ClassroomItem({
     isJoined: classInfo.isJoined,
   };
 
-  let color = randomColor(0.3, 0.91);
+  let color = randomColor(0.4, 0.93);
   return (
     <motion.div
       className={styles.container}
