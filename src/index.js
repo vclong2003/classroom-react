@@ -12,6 +12,7 @@ import LoginPage from "./Pages/Authentication/Login";
 import RegisterPage from "./Pages/Authentication/Register";
 import { verifySessionId } from "./Services/SymfonyApi/AuthHandler";
 import AllClassPage from "./Pages/AllClass";
+import "./Assets/Font.css";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

@@ -1,11 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Spinner from "react-bootstrap/Spinner";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import { getRole } from "../../Services/SymfonyApi/AuthHandler";
@@ -37,8 +30,6 @@ export default function AllClassPage() {
   const [loadingClassList, setLoadingClassList] = useState(false);
   const [searchVal, setSearchVal] = useState("");
 
-  const searchInput = useRef();
-
   const getClassroomList = () => {
     setClassroomList([]);
     setLoadingClassList(true);
@@ -64,8 +55,7 @@ export default function AllClassPage() {
 
   useEffect(() => {
     getClassroomList();
-    return;
-  }, [searchVal]);
+  }, []);
 
   function AuthorizedContent() {
     return (
@@ -74,13 +64,14 @@ export default function AllClassPage() {
           <Form.Control
             type="text"
             placeholder="Enter class name to search..."
+            value={searchVal}
             className={styles.searchInput}
             onChange={(evt) => {
+              setSearchVal(evt.target.value);
               setTimeout(() => {
-                setSearchVal(evt.target.value);
-              }, 1200);
+                getClassroomList();
+              }, 1000);
             }}
-            ref={searchInput}
           />
           {searchVal === "" ? (
             ""
@@ -88,7 +79,6 @@ export default function AllClassPage() {
             <Button
               className={styles.searchBtn}
               onClick={() => {
-                searchInput.current.value = "";
                 setSearchVal("");
               }}
             >
@@ -160,9 +150,7 @@ export default function AllClassPage() {
     <Routes>
       <Route
         path=""
-        element={
-          role == null ? <LoadingSpinner /> : <AuthorizedContent />
-        }
+        element={role == null ? <LoadingSpinner /> : <AuthorizedContent />}
       />
       <Route path=":classId" element={<ClassDetail role={role} />} />
     </Routes>

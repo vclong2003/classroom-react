@@ -2,7 +2,7 @@ import styles from "./classroomItemStyle.module.css";
 import Badge from "react-bootstrap/Badge";
 import { Col, Container, Image, Row } from "react-bootstrap";
 import { motion } from "framer-motion";
-import randomColor from "randomcolor";
+import randomColor from "random-color";
 
 export default function ClassroomItem({
   classInfo,
@@ -28,6 +28,7 @@ export default function ClassroomItem({
     isJoined: classInfo.isJoined,
   };
 
+  let color = randomColor(0.3, 0.91);
   return (
     <motion.div
       className={styles.container}
@@ -42,7 +43,7 @@ export default function ClassroomItem({
       <Container
         className={styles.top}
         style={{
-          backgroundColor: randomColor({ luminosity: "light" }),
+          backgroundColor: color.hexString(),
         }}
       >
         <Row className={styles.teacherInfoContainer}>

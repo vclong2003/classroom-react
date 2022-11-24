@@ -17,7 +17,7 @@
 }
 .teacherInfoContainer {
   position: absolute;
-  bottom: -16%;
+  bottom: -20px;
   justify-content: flex-start;
   align-items: center;
 }
@@ -32,7 +32,7 @@
   flex-direction: column;
 }
 .className {
-  margin-top: 20px;
+  margin-top: 28px;
   font-size: 18px;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   font-weight: 500;

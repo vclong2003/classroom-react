@@ -1,3 +1,4 @@
+import styles from "./style.module.css";
 import {
   Badge,
   Button,
@@ -8,15 +9,14 @@ import {
   Row,
   Spinner,
 } from "react-bootstrap";
-import { useParams } from "react-router-dom";
-import Accordion from "react-bootstrap/Accordion";
-import RichTextEditor from "../../Components/RichTextEditor";
-import { useEffect, useLayoutEffect, useState } from "react";
-import Card from "react-bootstrap/Card";
-import styles from "./style.module.css";
-import Tab from "react-bootstrap/Tab";
-import Tabs from "react-bootstrap/Tabs";
 import ListGroup from "react-bootstrap/ListGroup";
+import Accordion from "react-bootstrap/Accordion";
+
+import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+
+import PostItem from "./postItem";
+import RichTextEditor from "../../Components/RichTextEditor";
 import { getClassDetail } from "../../Services/SymfonyApi/ClassHandler";
 
 export default function ClassDetail({ role }) {
@@ -81,7 +81,16 @@ export default function ClassDetail({ role }) {
       <Container>
         {/* RENDER POST ITEMS HERE */}
         <PostItem />
+        <PostItem />
+        <PostItem />
+        <PostItem />
+        <PostItem />
+        <PostItem />
+        <PostItem />
       </Container>
+      <Button className={styles.addPostBtn}>
+        <i className="bi bi-pencil-square"></i>
+      </Button>
     </Container>
   );
 }
@@ -134,39 +143,6 @@ function StudentItem() {
     </ListGroup.Item>
   );
 }
-
-function PostItem() {
-  const [collapse, setCollapse] = useState(true);
-  return (
-    <Card>
-      <Card.Body
-        onClick={() => {
-          setCollapse(false);
-        }}
-      >
-        <Container
-          className={`${styles.commentBody} ${
-            collapse ? styles.commentBodyCollapse : ""
-          }`}
-          fluid
-        >
-          Mollit proident sit aliquip proident cupidatat. Esse sint laborum
-          incididunt aute ut adipisicing irure aute laborum elit nisi aute Lorem
-          amet. Consectetur fugiat eu et ad dolor aliqua commodo nostrud
-          proident. Ullamco laborum culpa ut aute eu esse exercitation commodo
-          qui eiusmod aute. Laboris culpa laboris est ullamco. Mollit proident
-          sit aliquip proident cupidatat. Mollit proident sit aliquip proident
-          cupidatat. Esse sint laborum incididunt aute ut adipisicing irure aute
-          laborum elit nisi aute Lorem amet. Consectetur fugiat eu et ad dolor
-          aliqua commodo nostrud proident. Ullamco laborum culpa ut aute eu esse
-          exercitation commodo qui eiusmod aute. Laboris culpa laboris est
-          ullamco. Mollit proident sit aliquip proident cupidatat.
-        </Container>
-      </Card.Body>
-    </Card>
-  );
-}
-
 function PostAdder() {
   const [postContent, setPostContent] = useState("");
 
