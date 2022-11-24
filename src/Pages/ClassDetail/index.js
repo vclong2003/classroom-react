@@ -1,4 +1,5 @@
 import {
+  Badge,
   Button,
   Col,
   Container,
@@ -16,101 +17,84 @@ import styles from "./style.module.css";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 import ListGroup from "react-bootstrap/ListGroup";
-import {
-  getClassDetail,
-  getStudentList,
-} from "../../Services/SymfonyApi/ClassHandler";
+import { getClassDetail } from "../../Services/SymfonyApi/ClassHandler";
 
 export default function ClassDetail({ role }) {
   const params = useParams();
 
   const [loading, setLoading] = useState(false);
-  const [classInfo, setClassInfo] = useState({});
-  const [studentList, setStudentList] = useState();
+  const [classInfo, setClassInfo] = useState({
+    id: 0,
+    name: "",
+    startDate: "",
+    studentCount: 0,
+    teacherId: 0,
+    teacherImgURL: "",
+    teacherName: "",
+  });
 
   useEffect(() => {
     getClassDetail(params.classId, (info) => {
       setClassInfo(info);
+      console.log(info);
     });
-    getStudentList(params.classId);
   }, []);
 
   return (
     <Container fluid className={styles.container}>
       <Container className={styles.classInfoContainer}>
+        <Row className={styles.className}>{classInfo.name}</Row>
         <Row>
-          <h1>{classInfo.name}</h1>
-        </Row>
-        <Row>
-          <Col xl={1} xxl={1}>
+          <Col xl={1} xxl={1} className={styles.teacherImgContainer}>
             <Image
               src={
                 classInfo.teacherImgURL
                   ? classInfo.teacherImgURL
-                  : require("../../Assets/userPlaceholder.jpg")
+                  : require("../../Assets/userPlaceholder.png")
               }
-              fluid
               roundedCircle
+              fluid
+              className={styles.teacherImg}
             />
           </Col>
-          <Col xl={11} xxl={11}>
+          <Col xl={6} xxl={6} className={styles.teacherName}>
             {classInfo.teacherName}
+            <div style={{ width: "6px" }} />
+            <Badge pill bg="info">
+              Teacher
+            </Badge>
+          </Col>
+          <Col xl={5} xxl={5} className={styles.classDetail}>
+            Class ID: {classInfo.id}
+            <br />
+            Created: {calcReadableDateTime(classInfo.startDate)}
+            <br />
+            Number of students: {classInfo.studentCount}
+            <br />
           </Col>
         </Row>
       </Container>
-      <Tabs
-        defaultActiveKey="stream"
-        id="uncontrolled-tab-example"
-        className="mb-3"
-      >
-        <Tab eventKey="stream" title="Stream">
-          <PostAdder />
-          <Container>
-            {/* RENDER POST ITEMS HERE */}
-            <PostItem />
-          </Container>
-        </Tab>
-        <Tab eventKey="people" title="People">
-          <Container>
-            <Button>Add</Button>
-          </Container>
-          <Container>
-            <Container fluid>
-              <h3>Teacher</h3>
-            </Container>
-            <Container>
-              <Row>
-                <Col xl={1} xxl={1}>
-                  <Image
-                    src={
-                      classInfo.teacherImgURL
-                        ? classInfo.teacherImgURL
-                        : require("../../Assets/userPlaceholder.jpg")
-                    }
-                    fluid
-                    roundedCircle
-                  />
-                </Col>
-                <Col xl={11} xxl={11}>
-                  Vu Cong Long
-                </Col>
-              </Row>
-            </Container>
-          </Container>
-          <Container>
-            <Container fluid>
-              <h3>Student</h3>
-            </Container>
-            <ListGroup variant="flush">
-              {/* RENDER STUDENTS HERE */}
-              <StudentItem />
-              <StudentItem />
-            </ListGroup>
-          </Container>
-        </Tab>
-      </Tabs>
+      <Container className={styles.actionBtnContainer}>
+        <Button className={styles.actionBtn}>View all members</Button>
+        <Button className={styles.actionBtn}>Take attendance</Button>
+      </Container>
+      <Container>
+        {/* RENDER POST ITEMS HERE */}
+        <PostItem />
+      </Container>
     </Container>
   );
+}
+
+function calcReadableDateTime(stringDateTime) {
+  const dateObj = new Date(Date.parse(stringDateTime));
+  return dateObj.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 }
 
 function StudentItem() {
@@ -179,10 +163,6 @@ function PostItem() {
           ullamco. Mollit proident sit aliquip proident cupidatat.
         </Container>
       </Card.Body>
-      <Container fluid>
-        <Form.Control />
-        <Button>Send</Button>
-      </Container>
     </Card>
   );
 }
