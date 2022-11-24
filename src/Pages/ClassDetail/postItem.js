@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { Badge, Button, Card, Container } from "react-bootstrap";
+import { Badge, Button, Container } from "react-bootstrap";
 import styles from "./style.module.css";
 
-export default function PostItem() {
+export default function PostItem({ postData, role }) {
   const [collapse, setCollapse] = useState(true);
   return (
     <Container className={styles.postContainer}>

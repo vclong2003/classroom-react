@@ -2,10 +2,12 @@ import styles from "./style.module.css";
 import {
   Badge,
   Button,
+  CloseButton,
   Col,
   Container,
   Form,
   Image,
+  Modal,
   Row,
   Spinner,
 } from "react-bootstrap";
@@ -18,6 +20,8 @@ import { useEffect, useState } from "react";
 import PostItem from "./postItem";
 import RichTextEditor from "../../Components/RichTextEditor";
 import { getClassDetail } from "../../Services/SymfonyApi/ClassHandler";
+import { readableDateTimeConvert } from "../../Components/ReadableDateTimeConverter";
+import { getPosts } from "../../Services/SymfonyApi/PostHandler";
 
 export default function ClassDetail({ role }) {
   const params = useParams();
@@ -29,15 +33,31 @@ export default function ClassDetail({ role }) {
     startDate: "",
     studentCount: 0,
     teacherId: 0,
-    teacherImgURL: "",
+    teacherImageUrl: "",
     teacherName: "",
+    teacherEmail: "",
+    teacherPhoneNumber: "",
   });
+  const [postData, setPostData] = useState([]);
+  const [teacherInfoModalVisible, setTeacherInfoModalVisible] = useState(false);
 
-  useEffect(() => {
+  const fetchClassDetail = () => {
     getClassDetail(params.classId, (info) => {
       setClassInfo(info);
-      console.log(info);
+      // console.log(info);
+      // console.log(role);
     });
+  };
+
+  const fetchPosts = () => {
+    getPosts(params.classId, (data) => {
+      console.log(data);
+    });
+  };
+
+  useEffect(() => {
+    fetchClassDetail();
+    fetchPosts();
   }, []);
 
   return (
@@ -48,8 +68,8 @@ export default function ClassDetail({ role }) {
           <Col xl={1} xxl={1} className={styles.teacherImgContainer}>
             <Image
               src={
-                classInfo.teacherImgURL
-                  ? classInfo.teacherImgURL
+                classInfo.teacherImageUrl
+                  ? classInfo.teacherImageUrl
                   : require("../../Assets/userPlaceholder.png")
               }
               roundedCircle
@@ -57,8 +77,17 @@ export default function ClassDetail({ role }) {
               className={styles.teacherImg}
             />
           </Col>
-          <Col xl={6} xxl={6} className={styles.teacherName}>
-            {classInfo.teacherName}
+          <Col
+            xl={6}
+            xxl={6}
+            className={styles.teacherName}
+            onClick={() => {
+              setTeacherInfoModalVisible(true);
+            }}
+          >
+            <div className={styles.teacherNameClickable}>
+              {classInfo.teacherName}
+            </div>
             <div style={{ width: "6px" }} />
             <Badge pill bg="info">
               Teacher
@@ -67,7 +96,7 @@ export default function ClassDetail({ role }) {
           <Col xl={5} xxl={5} className={styles.classDetail}>
             Class ID: {classInfo.id}
             <br />
-            Created: {calcReadableDateTime(classInfo.startDate)}
+            Created: {readableDateTimeConvert(classInfo.startDate)}
             <br />
             Number of students: {classInfo.studentCount}
             <br />
@@ -76,14 +105,14 @@ export default function ClassDetail({ role }) {
       </Container>
       <Container className={styles.actionBtnContainer}>
         <Button className={styles.actionBtn}>View all members</Button>
-        <Button className={styles.actionBtn}>Take attendance</Button>
+        {role === "teacher" ? (
+          <Button className={styles.actionBtn}>Take attendance</Button>
+        ) : (
+          ""
+        )}
       </Container>
       <Container>
         {/* RENDER POST ITEMS HERE */}
-        <PostItem />
-        <PostItem />
-        <PostItem />
-        <PostItem />
         <PostItem />
         <PostItem />
         <PostItem />
@@ -91,19 +120,55 @@ export default function ClassDetail({ role }) {
       <Button className={styles.addPostBtn}>
         <i className="bi bi-pencil-square"></i>
       </Button>
+      <TeacherInfoModal
+        teacherInfo={{
+          teacherEmail: classInfo.teacherEmail,
+          teacherName: classInfo.teacherName,
+          teacherPhoneNumber: classInfo.teacherPhoneNumber,
+        }}
+        visible={teacherInfoModalVisible}
+        closeCallback={() => {
+          setTeacherInfoModalVisible(false);
+        }}
+      />
     </Container>
   );
 }
 
-function calcReadableDateTime(stringDateTime) {
-  const dateObj = new Date(Date.parse(stringDateTime));
-  return dateObj.toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+function TeacherInfoModal({
+  teacherInfo = {
+    teacherEmail: "",
+    teacherName: "",
+    teacherPhoneNumber: "",
+  },
+  visible,
+  closeCallback,
+}) {
+  return (
+    <Modal
+      show={visible}
+      onHide={() => {
+        closeCallback();
+      }}
+      centered
+    >
+      <Modal.Body>
+        <Container>
+          <CloseButton
+            onClick={() => {
+              closeCallback();
+            }}
+          />
+        </Container>
+        <Container>
+          <h5>Teacher contact infomation:</h5>
+          <p>{teacherInfo.teacherName}</p>
+          <p>Email: {teacherInfo.teacherEmail}</p>
+          <p>Phone number: {teacherInfo.teacherPhoneNumber}</p>
+        </Container>
+      </Modal.Body>
+    </Modal>
+  );
 }
 
 function StudentItem() {

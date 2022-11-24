@@ -1,28 +1,27 @@
 import React, { useEffect, useRef, useState } from "react";
-import Spinner from "react-bootstrap/Spinner";
 import { Routes, Route, useNavigate } from "react-router-dom";
-import { getRole } from "../../Services/SymfonyApi/AuthHandler";
+
 import styles from "./style.module.css";
-import { Button, Container, Form } from "react-bootstrap";
-import Modal from "react-bootstrap/Modal";
-import ClassroomItem from "./ClassroomItem";
+import { Button, Container, Form, Modal, Spinner } from "react-bootstrap";
 import { motion } from "framer-motion";
+
 import {
   addClassroom,
   getClassrooms,
   joinClass,
 } from "../../Services/SymfonyApi/ClassHandler";
+import { getRole } from "../../Services/SymfonyApi/AuthHandler";
 import ClassDetail from "../ClassDetail";
+import ClassroomItem from "./ClassroomItem";
 
 export default function AllClassPage() {
+  const navigate = useNavigate();
   const [role, setRole] = useState(null);
   useEffect(() => {
     getRole((role) => {
       setRole(role);
     });
   }, []);
-
-  const navigate = useNavigate();
 
   const [addClassModalVisible, setAddClassModalVisible] = useState(false);
   const [joinClassModalVisible, setJoinClassModalVisible] = useState(false);

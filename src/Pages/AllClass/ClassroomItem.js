@@ -3,6 +3,7 @@ import Badge from "react-bootstrap/Badge";
 import { Col, Container, Image, Row } from "react-bootstrap";
 import { motion } from "framer-motion";
 import randomColor from "random-color";
+import { readableDateTimeConvert } from "../../Components/ReadableDateTimeConverter";
 
 export default function ClassroomItem({
   classInfo,
@@ -10,8 +11,6 @@ export default function ClassroomItem({
   openCallBack,
   joinCallBack,
 }) {
-  const dateObj = new Date(Date.parse(classInfo.startDate));
-
   const data = {
     classId: classInfo.id,
     className: classInfo.name,
@@ -19,11 +18,7 @@ export default function ClassroomItem({
     teacherImageUrl: classInfo.teacherImageUrl
       ? classInfo.teacherImageUrl
       : require("../../Assets/userPlaceholder.png"),
-    startDate: dateObj.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    }),
+    startDate: classInfo.startDate,
     studentCount: classInfo.studentCount,
     isJoined: classInfo.isJoined,
   };
@@ -67,7 +62,7 @@ export default function ClassroomItem({
           {data.className}
         </Container>
         <Container className={styles.classDescription}>
-          Start: {data.startDate}
+          Start: {readableDateTimeConvert(data.startDate, true)}
           <br />
           Students: {data.studentCount}
         </Container>

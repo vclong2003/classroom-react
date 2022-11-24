@@ -67,7 +67,7 @@ export function getClassDetail(classId, callback) {
         }
       })
       .catch((err) => {
-        console.log("Error getClassroom:" + err);
+        console.log("Error getClassDetail:" + err);
       });
   }
 }
