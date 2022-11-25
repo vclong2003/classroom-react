@@ -1,8 +1,8 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 
 import styles from "./style.module.css";
-import { Button, Container, Form, Modal, Spinner } from "react-bootstrap";
+import { Button, Container, Form, Modal } from "react-bootstrap";
 import { motion } from "framer-motion";
 
 import {
@@ -10,18 +10,14 @@ import {
   getClassrooms,
   joinClass,
 } from "../../Services/SymfonyApi/ClassHandler";
-import { getRole } from "../../Services/SymfonyApi/AuthHandler";
 import ClassDetail from "../ClassDetail";
 import ClassroomItem from "./ClassroomItem";
+import { RoleContext } from "../..";
+import LoadingSpinner from "../../Components/LoadingAnimation/Spinner";
 
 export default function AllClassPage() {
+  const role = useContext(RoleContext);
   const navigate = useNavigate();
-  const [role, setRole] = useState(null);
-  useEffect(() => {
-    getRole((role) => {
-      setRole(role);
-    });
-  }, []);
 
   const [addClassModalVisible, setAddClassModalVisible] = useState(false);
   const [joinClassModalVisible, setJoinClassModalVisible] = useState(false);
@@ -147,28 +143,9 @@ export default function AllClassPage() {
 
   return (
     <Routes>
-      <Route
-        path=""
-        element={role == null ? <LoadingSpinner /> : authorizedContent}
-      />
+      <Route path="" element={authorizedContent} />
       <Route path=":classId/*" element={<ClassDetail role={role} />} />
     </Routes>
-  );
-}
-
-function LoadingSpinner() {
-  return (
-    <Container
-      style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        marginTop: "60px",
-        marginBottom: "60px",
-      }}
-    >
-      <Spinner animation="border" />
-    </Container>
   );
 }
 

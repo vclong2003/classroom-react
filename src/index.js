@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
 import reportWebVitals from "./reportWebVitals";
 import {
@@ -10,9 +10,10 @@ import {
 import NavBar from "./Components/NavBar";
 import LoginPage from "./Pages/Authentication/Login";
 import RegisterPage from "./Pages/Authentication/Register";
-import { verifySessionId } from "./Services/SymfonyApi/AuthHandler";
+import { getRole } from "./Services/SymfonyApi/AuthHandler";
 import AllClassPage from "./Pages/AllClass";
 import "./Assets/Font.css";
+import LoadingSpinner from "./Components/LoadingAnimation/Spinner";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -21,13 +22,18 @@ root.render(
   </React.StrictMode>
 );
 
+export const RoleContext = createContext();
+
 function App() {
+  const [role, setRole] = useState(null);
   useEffect(() => {
-    verifySessionId();
+    getRole((role) => {
+      setRole(role);
+    });
   }, []);
 
   return (
-    <>
+    <RoleContext.Provider value={role}>
       <Router>
         <NavBar />
         <Routes>
@@ -44,16 +50,18 @@ function App() {
           <Route path="/register" element={<RegisterPage />} />
         </Routes>
       </Router>
-    </>
+    </RoleContext.Provider>
   );
 }
 
 function PrivateRoute({ children }) {
-  return localStorage.getItem("sessionId") ? (
-    children
-  ) : (
-    <Navigate to="/login" />
-  );
+  const role = useContext(RoleContext);
+  
+  if (localStorage.getItem("sessionId") === null) {
+    return <Navigate to="/login" />;
+  } else {
+    return role === null ? <LoadingSpinner /> : children;
+  }
 }
 
 reportWebVitals();
