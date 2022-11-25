@@ -9,28 +9,20 @@ import {
   Image,
   Modal,
   Row,
-  Spinner,
 } from "react-bootstrap";
 import ListGroup from "react-bootstrap/ListGroup";
-import Accordion from "react-bootstrap/Accordion";
 
-import {
-  Navigate,
-  Route,
-  Routes,
-  useNavigate,
-  useParams,
-} from "react-router-dom";
+import { Route, Routes, useNavigate, useParams } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 
 import PostItem from "./postItem";
-import RichTextEditor from "../../Components/RichTextEditor";
 import { getClassDetail } from "../../Services/SymfonyApi/ClassHandler";
 import { readableDateTimeConvert } from "../../Components/ReadableDateTimeConverter";
 import { getPosts } from "../../Services/SymfonyApi/PostHandler";
-import AddPostPage from "../AddPost";
+import AddPostPage from "../PostWriter";
 import { RoleContext } from "../..";
 import LoadingSpinner from "../../Components/LoadingAnimation/Spinner";
+import PostWriterPage from "../PostWriter";
 
 export default function ClassDetail() {
   const role = useContext(RoleContext);
@@ -157,7 +149,7 @@ export default function ClassDetail() {
                 <Button
                   className={styles.addPostBtn}
                   onClick={() => {
-                    navigate("addPost");
+                    navigate("postWriter");
                   }}
                 >
                   <i className="bi bi-pencil-square"></i>
@@ -178,7 +170,7 @@ export default function ClassDetail() {
           )
         }
       />
-      <Route path="addPost" element={<AddPostPage />} />
+      <Route path="postWriter" element={<PostWriterPage />} />
 
       {/* <Route
         path="post/:id/assignmentSubmit"
