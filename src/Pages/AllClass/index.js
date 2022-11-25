@@ -17,6 +17,17 @@ import LoadingSpinner from "../../Components/LoadingAnimation/Spinner";
 
 export default function AllClassPage() {
   const role = useContext(RoleContext);
+  function ProtectedContent({ children }) {
+    if (role === "teacher") {
+      return children;
+    }
+  }
+  function ExcludeContent({ children }) {
+    if (role !== "teacher") {
+      return children;
+    }
+  }
+
   const navigate = useNavigate();
 
   const [addClassModalVisible, setAddClassModalVisible] = useState(false);
@@ -54,96 +65,97 @@ export default function AllClassPage() {
     getClassroomList();
   }, [searchVal]);
 
-  const authorizedContent = (
-    <Container fluid className={styles.container}>
-      <Container className={styles.searchContainer}>
-        <Form.Control
-          type="text"
-          placeholder="Enter class name to search..."
-          className={styles.searchInput}
-          onChange={(evt) => {
-            setTimeout(() => {
-              setSearchVal(evt.target.value);
-            }, 1000);
-          }}
-          ref={searchInput}
-        />
-        {searchVal === "" ? (
-          ""
-        ) : (
-          <Button
-            className={styles.searchBtn}
-            onClick={() => {
-              searchInput.current.value = "";
-              setSearchVal("");
-            }}
-          >
-            Cancel
-          </Button>
-        )}
-      </Container>
-      <Container className={styles.classItemsContainer}>
-        {loadingClassList ? (
-          <LoadingSpinner />
-        ) : role === "teacher" ? (
-          <motion.div
-            initial={{ borderRadius: "10px" }}
-            whileHover={{
-              rotate: 180,
-            }}
-            whileTap={{ scale: 0.8 }}
-            className={styles.addBtn}
-            onClick={() => {
-              setAddClassModalVisible(true);
-            }}
-          >
-            <i className="bi bi-plus-circle"></i>
-          </motion.div>
-        ) : (
-          ""
-        )}
-        {/* RENDER CLASSROOM ITEMS HERE */}
-        {classroomList.map((item, index) => {
-          return (
-            <ClassroomItem
-              classInfo={item}
-              key={index}
-              role={role}
-              joinCallBack={(id) => {
-                handleJoinClass(id);
-              }}
-              openCallBack={(id) => {
-                handleOpenClass(id);
-              }}
-            />
-          );
-        })}
-      </Container>
-      {role === "teacher" ? (
-        <AddClassModal
-          visible={addClassModalVisible}
-          cancelCallback={() => {
-            setAddClassModalVisible(false);
-          }}
-          addCallback={(className) => {
-            setAddClassModalVisible(false);
-            handleAddClass(className);
-          }}
-        />
-      ) : (
-        <JoinClassModal
-          visible={joinClassModalVisible}
-          cancelCallback={() => {
-            setJoinClassModalVisible(false);
-          }}
-        />
-      )}
-    </Container>
-  );
-
   return (
     <Routes>
-      <Route path="" element={authorizedContent} />
+      <Route
+        path=""
+        element={
+          <Container fluid className={styles.container}>
+            <Container className={styles.searchContainer}>
+              <Form.Control
+                type="text"
+                placeholder="Enter class name to search..."
+                className={styles.searchInput}
+                onChange={(evt) => {
+                  setTimeout(() => {
+                    setSearchVal(evt.target.value);
+                  }, 1000);
+                }}
+                ref={searchInput}
+              />
+              {searchVal === "" ? (
+                ""
+              ) : (
+                <Button
+                  className={styles.searchBtn}
+                  onClick={() => {
+                    searchInput.current.value = "";
+                    setSearchVal("");
+                  }}
+                >
+                  Cancel
+                </Button>
+              )}
+            </Container>
+            <Container className={styles.classItemsContainer}>
+              {loadingClassList ? (
+                <LoadingSpinner />
+              ) : (
+                <ProtectedContent>
+                  <motion.div
+                    initial={{ borderRadius: "10px" }}
+                    whileHover={{
+                      rotate: 180,
+                    }}
+                    whileTap={{ scale: 0.8 }}
+                    className={styles.addBtn}
+                    onClick={() => {
+                      setAddClassModalVisible(true);
+                    }}
+                  >
+                    <i className="bi bi-plus-circle"></i>
+                  </motion.div>
+                </ProtectedContent>
+              )}
+              {/* RENDER CLASSROOM ITEMS HERE */}
+              {classroomList.map((item, index) => {
+                return (
+                  <ClassroomItem
+                    classInfo={item}
+                    key={index}
+                    joinCallBack={(id) => {
+                      handleJoinClass(id);
+                    }}
+                    openCallBack={(id) => {
+                      handleOpenClass(id);
+                    }}
+                  />
+                );
+              })}
+            </Container>
+            <ProtectedContent>
+              <AddClassModal
+                visible={addClassModalVisible}
+                cancelCallback={() => {
+                  setAddClassModalVisible(false);
+                }}
+                addCallback={(className) => {
+                  setAddClassModalVisible(false);
+                  handleAddClass(className);
+                }}
+              />
+            </ProtectedContent>
+            <ExcludeContent>
+              <JoinClassModal
+                visible={joinClassModalVisible}
+                cancelCallback={() => {
+                  setJoinClassModalVisible(false);
+                }}
+              />
+            </ExcludeContent>
+          </Container>
+        }
+      />
       <Route path=":classId/*" element={<ClassDetail role={role} />} />
     </Routes>
   );

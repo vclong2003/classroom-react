@@ -4,10 +4,11 @@ import { Col, Container, Image, Row } from "react-bootstrap";
 import { motion } from "framer-motion";
 import randomColor from "random-color";
 import { readableDateTimeConvert } from "../../Components/ReadableDateTimeConverter";
+import { useContext } from "react";
+import { RoleContext } from "../..";
 
 export default function ClassroomItem({
   classInfo,
-  role,
   openCallBack,
   joinCallBack,
 }) {
@@ -23,17 +24,22 @@ export default function ClassroomItem({
     isJoined: classInfo.isJoined,
   };
 
+  const role = useContext(RoleContext);
+  const clickHandler = () => {
+    if (role === "teacher" || data.isJoined) {
+      openCallBack(data.classId);
+    } else {
+      joinCallBack(data.classId);
+    }
+  };
+
   let color = randomColor(0.4, 0.93);
   return (
     <motion.div
       className={styles.container}
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.9 }}
-      onClick={() => {
-        role === "teacher" || data.isJoined
-          ? openCallBack(data.classId)
-          : joinCallBack(data.classId);
-      }}
+      onClick={clickHandler}
     >
       <Container
         className={styles.top}

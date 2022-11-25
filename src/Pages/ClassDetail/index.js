@@ -21,7 +21,7 @@ import {
   useNavigate,
   useParams,
 } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import PostItem from "./postItem";
 import RichTextEditor from "../../Components/RichTextEditor";
@@ -29,8 +29,22 @@ import { getClassDetail } from "../../Services/SymfonyApi/ClassHandler";
 import { readableDateTimeConvert } from "../../Components/ReadableDateTimeConverter";
 import { getPosts } from "../../Services/SymfonyApi/PostHandler";
 import AddPostPage from "../AddPost";
+import { RoleContext } from "../..";
+import LoadingSpinner from "../../Components/LoadingAnimation/Spinner";
 
-export default function ClassDetail({ role }) {
+export default function ClassDetail() {
+  const role = useContext(RoleContext);
+  function ProtectedContent({ children }) {
+    if (role === "teacher") {
+      return children;
+    }
+  }
+  function ExcludeContent({ children }) {
+    if (role !== "teacher") {
+      return children;
+    }
+  }
+
   const params = useParams();
   const navigate = useNavigate();
 
@@ -73,113 +87,98 @@ export default function ClassDetail({ role }) {
     fetchPosts();
   }, []);
 
-  const authorizedContent = pageLoading ? (
-    <LoadingSpinner />
-  ) : (
-    <Container fluid className={styles.container}>
-      <Container className={styles.classInfoContainer}>
-        <Row className={styles.className}>{classInfo.name}</Row>
-        <Row>
-          <Col xl={1} xxl={1} className={styles.teacherImgContainer}>
-            <Image
-              src={
-                classInfo.teacherImageUrl
-                  ? classInfo.teacherImageUrl
-                  : require("../../Assets/userPlaceholder.png")
-              }
-              roundedCircle
-              fluid
-              className={styles.teacherImg}
-            />
-          </Col>
-          <Col
-            xl={6}
-            xxl={6}
-            className={styles.teacherName}
-            onClick={() => {
-              setTeacherInfoModalVisible(true);
-            }}
-          >
-            <div className={styles.teacherNameClickable}>
-              {classInfo.teacherName}
-            </div>
-            <div style={{ width: "6px" }} />
-            <Badge pill bg="info">
-              Teacher
-            </Badge>
-          </Col>
-          <Col xl={5} xxl={5} className={styles.classDetail}>
-            Class ID: {classInfo.id}
-            <br />
-            Created: {readableDateTimeConvert(classInfo.startDate)}
-            <br />
-            Number of students: {classInfo.studentCount}
-            <br />
-          </Col>
-        </Row>
-      </Container>
-      <Container className={styles.actionBtnContainer}>
-        <Button className={styles.actionBtn}>View all members</Button>
-        {role === "teacher" ? (
-          <Button className={styles.actionBtn}>Take attendance</Button>
-        ) : (
-          ""
-        )}
-      </Container>
-      {postLoading ? (
-        <LoadingSpinner />
-      ) : (
-        <Container>
-          {/* RENDER POST ITEMS HERE */}
-          {postList.map((item, index) => {
-            return <PostItem data={item} role={role} key={index} />;
-          })}
-        </Container>
-      )}
-      {role === "teacher" ? (
-        <Button
-          className={styles.addPostBtn}
-          onClick={() => {
-            navigate("post");
-          }}
-        >
-          <i className="bi bi-pencil-square"></i>
-        </Button>
-      ) : (
-        ""
-      )}
-      <TeacherInfoModal
-        teacherInfo={{
-          teacherEmail: classInfo.teacherEmail,
-          teacherName: classInfo.teacherName,
-          teacherPhoneNumber: classInfo.teacherPhoneNumber,
-        }}
-        visible={teacherInfoModalVisible}
-        closeCallback={() => {
-          setTeacherInfoModalVisible(false);
-        }}
-      />
-    </Container>
-  );
-
   return (
     <Routes>
       <Route
         path=""
-        element={role == null ? <LoadingSpinner /> : authorizedContent}
-      />
-      <Route
-        path="post/*"
         element={
-          role == null ? (
+          pageLoading ? (
             <LoadingSpinner />
-          ) : role === "teacher" ? (
-            <AddPostPage />
           ) : (
-            <Navigate to="/" />
+            <Container fluid className={styles.container}>
+              <Container className={styles.classInfoContainer}>
+                <Row className={styles.className}>{classInfo.name}</Row>
+                <Row>
+                  <Col xl={1} xxl={1} className={styles.teacherImgContainer}>
+                    <Image
+                      src={
+                        classInfo.teacherImageUrl
+                          ? classInfo.teacherImageUrl
+                          : require("../../Assets/userPlaceholder.png")
+                      }
+                      roundedCircle
+                      fluid
+                      className={styles.teacherImg}
+                    />
+                  </Col>
+                  <Col
+                    xl={6}
+                    xxl={6}
+                    className={styles.teacherName}
+                    onClick={() => {
+                      setTeacherInfoModalVisible(true);
+                    }}
+                  >
+                    <div className={styles.teacherNameClickable}>
+                      {classInfo.teacherName}
+                    </div>
+                    <div style={{ width: "6px" }} />
+                    <Badge pill bg="info">
+                      Teacher
+                    </Badge>
+                  </Col>
+                  <Col xl={5} xxl={5} className={styles.classDetail}>
+                    Class ID: {classInfo.id}
+                    <br />
+                    Created: {readableDateTimeConvert(classInfo.startDate)}
+                    <br />
+                    Number of students: {classInfo.studentCount}
+                    <br />
+                  </Col>
+                </Row>
+              </Container>
+              <Container className={styles.actionBtnContainer}>
+                <Button className={styles.actionBtn}>View all members</Button>
+                <ProtectedContent>
+                  <Button className={styles.actionBtn}>Take attendance</Button>
+                </ProtectedContent>
+              </Container>
+              {postLoading ? (
+                <LoadingSpinner />
+              ) : (
+                <Container>
+                  {/* RENDER POST ITEMS HERE */}
+                  {postList.map((item, index) => {
+                    return <PostItem data={item} key={index} />;
+                  })}
+                </Container>
+              )}
+              <ProtectedContent>
+                <Button
+                  className={styles.addPostBtn}
+                  onClick={() => {
+                    navigate("addPost");
+                  }}
+                >
+                  <i className="bi bi-pencil-square"></i>
+                </Button>
+              </ProtectedContent>
+              <TeacherInfoModal
+                teacherInfo={{
+                  teacherEmail: classInfo.teacherEmail,
+                  teacherName: classInfo.teacherName,
+                  teacherPhoneNumber: classInfo.teacherPhoneNumber,
+                }}
+                visible={teacherInfoModalVisible}
+                closeCallback={() => {
+                  setTeacherInfoModalVisible(false);
+                }}
+              />
+            </Container>
           )
         }
       />
+      <Route path="addPost" element={<AddPostPage />} />
 
       {/* <Route
         path="post/:id/assignmentSubmit"
@@ -224,22 +223,6 @@ function TeacherInfoModal({
         </Container>
       </Modal.Body>
     </Modal>
-  );
-}
-
-function LoadingSpinner() {
-  return (
-    <Container
-      style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        marginTop: "60px",
-        marginBottom: "60px",
-      }}
-    >
-      <Spinner animation="border" />
-    </Container>
   );
 }
 
