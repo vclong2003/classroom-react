@@ -170,7 +170,8 @@ export default function ClassDetail() {
           )
         }
       />
-      <Route path="postWriter" element={<PostWriterPage />} />
+      <Route path="postWriter/*" element={<PostWriterPage />} />
+      <Route path="postWriter/:postId" element={<PostWriterPage />} />
 
       {/* <Route
         path="post/:id/assignmentSubmit"

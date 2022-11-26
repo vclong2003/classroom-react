@@ -7,25 +7,53 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { useContext, useEffect, useState } from "react";
 import { RoleContext } from "../..";
+import {
+  addPost,
+  getSinglePost,
+  updatePost,
+} from "../../Services/SymfonyApi/PostHandler";
+import LoadingSpinner from "../../Components/LoadingAnimation/Spinner";
 
 export default function PostWriterPage() {
   const navigate = useNavigate();
   const role = useContext(RoleContext);
 
-  const params = useParams();
-  const classId = params.classId;
+  const [loading, setLoading] = useState(false);
+
+  const [mode, setMode] = useState("add");
   const [postContent, setPostContent] = useState("");
   const [isAsm, setIsAsm] = useState(false);
-
+  const params = useParams();
+  const classId = params.classId;
+  const postId = params.postId;
   useEffect(() => {
-    console.log(postContent);
-  }, [postContent]);
+    if (postId) {
+      setMode("update");
+      setLoading(true);
+      getSinglePost(classId, postId, (data) => {
+        setIsAsm(data.isAssignment);
+        setPostContent(data.content);
+        setLoading(false);
+      });
+    }
+  }, [postId, classId]);
 
-  const handleAddPost = () => {};
+  const handleAddPost = () => {
+    addPost(classId, isAsm, postContent, () => {
+      console.log("added!");
+    });
+  };
+  const handleUpdatePost = () => {
+    updatePost(classId, postId, isAsm, postContent, () => {
+      console.log("updated!");
+    });
+  };
   const handleCancel = () => {};
 
   if (role === "teacher") {
-    return (
+    return loading ? (
+      <LoadingSpinner />
+    ) : (
       <Container fluid className={styles.container}>
         <Container className={styles.title}>
           Post something to your class
@@ -79,7 +107,20 @@ export default function PostWriterPage() {
           />
         </Container>
         <Container className={styles.actionBtnContainer}>
-          <Button className={styles.actionBtn}>Save</Button>
+          {mode === "add" ? (
+            <Button className={styles.actionBtn} onClick={handleAddPost}>
+              Add
+            </Button>
+          ) : (
+            ""
+          )}
+          {mode === "update" ? (
+            <Button className={styles.actionBtn} onClick={handleUpdatePost}>
+              Save changes
+            </Button>
+          ) : (
+            ""
+          )}
           <Button
             className={styles.actionBtn}
             style={{ backgroundColor: "gray" }}

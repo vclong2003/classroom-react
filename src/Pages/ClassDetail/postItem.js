@@ -1,17 +1,24 @@
 import { useContext, useState } from "react";
-import { Badge, Button, Container } from "react-bootstrap";
+import { Badge, Button, Container, Modal } from "react-bootstrap";
+import { useNavigate, useParams } from "react-router-dom";
 import { RoleContext } from "../..";
+import ConfirmationPopup from "../../Components/ComfirmationPopup";
 import { readableDateTimeConvert } from "../../Components/ReadableDateTimeConverter";
+import { deletePost } from "../../Services/SymfonyApi/PostHandler";
 import styles from "./style.module.css";
 
 export default function PostItem({
   data = {
+    id: 0,
     content: "",
     dateAdded: "",
     isAssignment: true,
     asmId: null,
   },
 }) {
+  const navigate = useNavigate();
+  const params = useParams();
+  const classId = params.classId;
   const role = useContext(RoleContext);
   function ProtectedContent({ children }) {
     if (role === "teacher") {
@@ -25,6 +32,18 @@ export default function PostItem({
   }
 
   const [collapse, setCollapse] = useState(true);
+  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
+
+  const handleEditBtn = () => {
+    navigate(`postWriter/${data.id}`);
+  };
+  const handleDeletePost = () => {
+    deletePost(classId, data.id, () => {
+      setDeleteModalVisible(false);
+      console.log("post deleted!");
+    });
+  };
+
   return (
     <Container className={styles.postContainer}>
       <Container className={styles.postInfoContainer}>
@@ -40,7 +59,7 @@ export default function PostItem({
               </Badge>
             )
           ) : (
-            ""
+            <div />
           )}
         </ExcludeContent>
         <ProtectedContent>
@@ -49,7 +68,7 @@ export default function PostItem({
               Assignment
             </Badge>
           ) : (
-            ""
+            <div />
           )}
         </ProtectedContent>
         <div className={styles.postTime}>
@@ -64,26 +83,45 @@ export default function PostItem({
         onClick={() => {
           setCollapse(false);
         }}
-      >
-        {data.content}
-      </Container>
+        dangerouslySetInnerHTML={{ __html: data.content }}
+      />
       <Container fluid className={styles.postActionBtnContainer}>
         <ProtectedContent>
-          <div className={styles.postEditBtn}>
+          <div className={styles.postEditBtn} onClick={handleEditBtn}>
             <i className="bi bi-pencil-fill"></i> Edit
           </div>
-          <div className={styles.postEditBtn} style={{ color: "gray" }}>
+          <div
+            className={styles.postEditBtn}
+            style={{ color: "gray" }}
+            onClick={() => {
+              setDeleteModalVisible(true);
+            }}
+          >
             <i className="bi bi-trash2-fill"></i> Delete
           </div>
         </ProtectedContent>
         <ExcludeContent>
           {data.isAssignment ? (
-            <Button className={styles.actionBtn}>Submit assignment</Button>
+            data.asmId ? (
+              <Button className={styles.actionBtn}>Edit assignment</Button>
+            ) : (
+              <Button className={styles.actionBtn}>Submit assignment</Button>
+            )
           ) : (
-            ""
+            <div />
           )}
         </ExcludeContent>
       </Container>
+      <ConfirmationPopup
+        message="Do you really want to delete this post?"
+        visible={deleteModalVisible}
+        handleClose={() => {
+          setDeleteModalVisible(false);
+        }}
+        handleConfirm={() => {
+          handleDeletePost();
+        }}
+      />
     </Container>
   );
 }

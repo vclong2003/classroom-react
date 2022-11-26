@@ -1,0 +1,15 @@
+.message {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 18px;
+}
+.btn {
+  border: none;
+  outline: none;
+  background-color: #666690;
+  font-size: 15px;
+  margin-top: 8px;
+  margin-right: 6px;
+  border-radius: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
