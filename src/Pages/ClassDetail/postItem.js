@@ -46,9 +46,6 @@ export default function PostItem({
   const handleSubmitAsmBtn = () => {
     navigate(`post/${data.id}/assignment`);
   };
-  const handleEditAsmBtn = () => {
-    navigate(`post/${data.id}/assignment/${data.asmId}`);
-  };
 
   return (
     <Container className={styles.postContainer}>
@@ -108,15 +105,9 @@ export default function PostItem({
         </ProtectedContent>
         <ExcludeContent>
           {data.isAssignment ? (
-            data.asmId ? (
-              <Button className={styles.actionBtn} onClick={handleEditAsmBtn}>
-                Edit Submitted
-              </Button>
-            ) : (
-              <Button className={styles.actionBtn} onClick={handleSubmitAsmBtn}>
-                Submit assignment
-              </Button>
-            )
+            <Button className={styles.actionBtn} onClick={handleSubmitAsmBtn}>
+              {data.asmId ? "Edit submission" : "Submit"}
+            </Button>
           ) : (
             <div />
           )}

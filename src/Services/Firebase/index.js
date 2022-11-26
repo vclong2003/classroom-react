@@ -4,9 +4,9 @@ import { getAnalytics } from "firebase/analytics";
 import {
   getStorage,
   ref,
-  uploadBytes,
   getDownloadURL,
   uploadBytesResumable,
+  refFromURL,
 } from "firebase/storage";
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -27,8 +27,8 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
-
 const storage = getStorage();
+
 export function uploadFile(folderName, file, uploadingCallback, doneCallback) {
   const storageRef = ref(storage, `${folderName}/${file.name}`);
   const uploadTask = uploadBytesResumable(storageRef, file);
@@ -53,4 +53,13 @@ export function uploadFile(folderName, file, uploadingCallback, doneCallback) {
       });
     }
   );
+}
+
+export async function getFileName(url) {
+  const fileRef = await ref(storage, url);
+  if (fileRef) {
+    return fileRef.name;
+  } else {
+    return "untitled";
+  }
 }

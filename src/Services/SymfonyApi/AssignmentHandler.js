@@ -73,9 +73,14 @@ export function addAsm(classId, postId, asmFileUrl, callback) {
     )
       .then((response) => {
         if (response.status === 201) {
-          callback();
+          return response.json();
         } else {
           console.log(response.status);
+        }
+      })
+      .then((data) => {
+        if (data) {
+          callback(data);
         }
       })
       .catch((err) => {

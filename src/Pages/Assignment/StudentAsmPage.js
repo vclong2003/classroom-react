@@ -7,13 +7,16 @@ import {
   ProgressBar,
   Row,
 } from "react-bootstrap";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import LoadingSpinner from "../../Components/LoadingAnimation/Spinner";
 import { useParams } from "react-router-dom";
 import { getSinglePost } from "../../Services/SymfonyApi/PostHandler";
 import uuid from "react-uuid";
-import { uploadFile } from "../../Services/Firebase";
-import { addAsm } from "../../Services/SymfonyApi/AssignmentHandler";
+import { getFileName, uploadFile } from "../../Services/Firebase";
+import {
+  addAsm,
+  getSingleAsm,
+} from "../../Services/SymfonyApi/AssignmentHandler";
 
 export default function StudentAsmPage() {
   const params = useParams();
@@ -21,10 +24,44 @@ export default function StudentAsmPage() {
   const postId = params.postId;
 
   const [loading, setLoading] = useState(false);
-  const [postLoading, setPostLoading] = useState(false);
   const [postData, setPostData] = useState("");
   const [file, setFile] = useState(null);
   const [uploadProgress, setUploadProgress] = useState(0);
+  const [asm, setAsm] = useState(null);
+
+  const initData = () => {
+    setLoading(true);
+    getSinglePost(classId, postId, (data) => {
+      setPostData(data);
+      if (data.asmId) {
+        getSingleAsm(classId, postId, data.asmId, (asm) => {
+          setAsm(asm);
+          setLoading(false);
+        });
+      } else {
+        setLoading(false);
+      }
+    });
+  };
+
+  function AsmDownLoadUrl() {
+    const [content, setContent] = useState(<></>);
+    if (asm) {
+      getFileName(asm.fileUrl).then((fileName) => {
+        setContent(
+          <Container className={styles.sumbitedAsmContainer}>
+            <Container>
+              <h5>Submited file</h5>
+            </Container>
+            <Container>
+              <a href={asm.fileUrl}>{fileName}</a>
+            </Container>
+          </Container>
+        );
+      });
+    }
+    return content;
+  }
 
   const handleAddAsm = () => {
     if (file) {
@@ -45,55 +82,51 @@ export default function StudentAsmPage() {
   };
 
   useEffect(() => {
-    setPostLoading(true);
-    getSinglePost(classId, postId, (data) => {
-      setPostData(data);
-      setPostLoading(false);
-      console.log(data);
-    });
+    initData();
   }, []);
 
-  return loading ? (
-    <LoadingSpinner />
-  ) : (
+  return (
     <Container fluid className={styles.container}>
-      <Container>
-        <Row>
-          <Col xl={9} xxl={9}>
-            {postLoading ? (
-              <LoadingSpinner />
-            ) : (
+      {loading ? (
+        <LoadingSpinner />
+      ) : (
+        <Container>
+          <Row>
+            <Col xl={9} xxl={9}>
               <Container
                 className={styles.postContent}
                 dangerouslySetInnerHTML={{ __html: postData.content }}
               />
-            )}
-          </Col>
-          <Col xl={3} xxl={3} className={styles.asmContainer}>
-            <Container>
-              <ProgressBar
-                striped
-                variant="info"
-                now={uploadProgress}
-                style={{
-                  visibility: uploadProgress === 0 ? "hidden" : "unset",
-                  marginBottom: "12px",
-                }}
-              />
-              <Form.Control
-                type="file"
-                onChange={(evt) => {
-                  setFile(evt.target.files[0]);
-                }}
-              />
-
-              <Button className={styles.submitBtn} onClick={handleAddAsm}>
-                Submit
-              </Button>
-            </Container>
-          </Col>
-        </Row>
-      </Container>
+            </Col>
+            <Col xl={3} xxl={3} className={styles.asmContainer}>
+              <AsmDownLoadUrl />
+              <Container>
+                <ProgressBar
+                  striped
+                  variant="info"
+                  now={uploadProgress}
+                  style={{
+                    visibility: uploadProgress === 0 ? "hidden" : "unset",
+                    marginBottom: "12px",
+                  }}
+                />
+                <Form.Control
+                  type="file"
+                  onChange={(evt) => {
+                    setFile(evt.target.files[0]);
+                  }}
+                />
+                <Button className={styles.submitBtn} onClick={handleAddAsm}>
+                  Submit
+                </Button>
+                <Button className={styles.submitBtn} onClick={handleAddAsm}>
+                  Re-Submit
+                </Button>
+              </Container>
+            </Col>
+          </Row>
+        </Container>
+      )}
     </Container>
   );
 }
