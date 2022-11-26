@@ -19,10 +19,10 @@ import PostItem from "./postItem";
 import { getClassDetail } from "../../Services/SymfonyApi/ClassHandler";
 import { readableDateTimeConvert } from "../../Components/ReadableDateTimeConverter";
 import { getPosts } from "../../Services/SymfonyApi/PostHandler";
-import AddPostPage from "../PostWriter";
 import { RoleContext } from "../..";
 import LoadingSpinner from "../../Components/LoadingAnimation/Spinner";
 import PostWriterPage from "../PostWriter";
+import AssignmentPage from "../Assignment";
 
 export default function ClassDetail() {
   const role = useContext(RoleContext);
@@ -149,7 +149,7 @@ export default function ClassDetail() {
                 <Button
                   className={styles.addPostBtn}
                   onClick={() => {
-                    navigate("postWriter");
+                    navigate("post/add");
                   }}
                 >
                   <i className="bi bi-pencil-square"></i>
@@ -170,13 +170,9 @@ export default function ClassDetail() {
           )
         }
       />
-      <Route path="postWriter/*" element={<PostWriterPage />} />
-      <Route path="postWriter/:postId" element={<PostWriterPage />} />
-
-      {/* <Route
-        path="post/:id/assignmentSubmit"
-        element={<Container>Test</Container>}
-      /> */}
+      <Route path="post/add" element={<PostWriterPage />} />
+      <Route path="post/:postId/edit" element={<PostWriterPage />} />
+      <Route path="post/:postId/assignment/*" element={<AssignmentPage />} />
     </Routes>
   );
 }

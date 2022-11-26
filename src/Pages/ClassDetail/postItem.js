@@ -35,13 +35,19 @@ export default function PostItem({
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
 
   const handleEditBtn = () => {
-    navigate(`postWriter/${data.id}`);
+    navigate(`post/${data.id}/edit`);
   };
   const handleDeletePost = () => {
     deletePost(classId, data.id, () => {
       setDeleteModalVisible(false);
       console.log("post deleted!");
     });
+  };
+  const handleSubmitAsmBtn = () => {
+    navigate(`post/${data.id}/assignment`);
+  };
+  const handleEditAsmBtn = () => {
+    navigate(`post/${data.id}/assignment/${data.asmId}`);
   };
 
   return (
@@ -103,9 +109,13 @@ export default function PostItem({
         <ExcludeContent>
           {data.isAssignment ? (
             data.asmId ? (
-              <Button className={styles.actionBtn}>Edit assignment</Button>
+              <Button className={styles.actionBtn} onClick={handleEditAsmBtn}>
+                Edit Submitted
+              </Button>
             ) : (
-              <Button className={styles.actionBtn}>Submit assignment</Button>
+              <Button className={styles.actionBtn} onClick={handleSubmitAsmBtn}>
+                Submit assignment
+              </Button>
             )
           ) : (
             <div />
