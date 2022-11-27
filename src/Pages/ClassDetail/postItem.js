@@ -14,6 +14,7 @@ export default function PostItem({
     dateAdded: "",
     isAssignment: true,
     asmId: null,
+    submitCount: 0,
   },
 }) {
   const navigate = useNavigate();
@@ -46,6 +47,9 @@ export default function PostItem({
   const handleSubmitAsmBtn = () => {
     navigate(`post/${data.id}/assignment`);
   };
+  const handleViewAsm = () => {
+    navigate(`post/${data.id}/assignment`);
+  };
 
   return (
     <Container className={styles.postContainer}>
@@ -67,8 +71,8 @@ export default function PostItem({
         </ExcludeContent>
         <ProtectedContent>
           {data.isAssignment ? (
-            <Badge pill bg="secondary" text="light" className={styles.asmBadge}>
-              Assignment
+            <Badge pill bg="info" text="light" className={styles.asmBadge}>
+              Submissions: {data.submitCount}
             </Badge>
           ) : (
             <div />
@@ -90,6 +94,13 @@ export default function PostItem({
       />
       <Container fluid className={styles.postActionBtnContainer}>
         <ProtectedContent>
+          {data.submitCount === 0 ? (
+            <div />
+          ) : (
+            <Button className={styles.actionBtn} onClick={handleViewAsm}>
+              View submissions
+            </Button>
+          )}
           <div className={styles.postEditBtn} onClick={handleEditBtn}>
             <i className="bi bi-pencil-fill"></i> Edit
           </div>

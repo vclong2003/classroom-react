@@ -1,0 +1,42 @@
+.container {
+  min-height: 100vh;
+  background-color: #f7f8ff;
+  padding-top: 20px;
+  padding-bottom: 50px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+.sectionTitle {
+  font-size: 30px;
+  margin-bottom: 6px;
+  font-weight: 500;
+  font-style: italic;
+}
+.studentItemHeader {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.studentImgContainer {
+  width: 6%;
+}
+.studentName {
+  font-size: 18px;
+  margin-left: 8px;
+  font-weight: 400;
+}
+.studentItemFieldTitle {
+  font-size: 18px;
+  font-style: italic;
+  font-weight: 500;
+  color: #545382;
+}
+.studentItemActionBtn {
+  background-color: #545382;
+  border: none;
+  outline: none;
+  margin-top: 10px;
+  border-radius: 18px;
+  padding-left: 15px;
+  padding-right: 15px;
+}

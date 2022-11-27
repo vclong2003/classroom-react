@@ -6,7 +6,6 @@ import {
   ref,
   getDownloadURL,
   uploadBytesResumable,
-  refFromURL,
 } from "firebase/storage";
 
 // TODO: Add SDKs for Firebase products that you want to use

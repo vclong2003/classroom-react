@@ -23,6 +23,7 @@ import { RoleContext } from "../..";
 import LoadingSpinner from "../../Components/LoadingAnimation/Spinner";
 import PostWriterPage from "../PostWriter";
 import AssignmentPage from "../Assignment";
+import AllMemberPage from "../AllMembers";
 
 export default function ClassDetail() {
   const role = useContext(RoleContext);
@@ -130,7 +131,14 @@ export default function ClassDetail() {
                 </Row>
               </Container>
               <Container className={styles.actionBtnContainer}>
-                <Button className={styles.actionBtn}>View all members</Button>
+                <Button
+                  className={styles.actionBtn}
+                  onClick={() => {
+                    navigate("allMember");
+                  }}
+                >
+                  View all members
+                </Button>
                 <ProtectedContent>
                   <Button className={styles.actionBtn}>Take attendance</Button>
                 </ProtectedContent>
@@ -170,6 +178,7 @@ export default function ClassDetail() {
           )
         }
       />
+      <Route path="allMember" element={<AllMemberPage />} />
       <Route path="post/add" element={<PostWriterPage />} />
       <Route path="post/:postId/edit" element={<PostWriterPage />} />
       <Route path="post/:postId/assignment" element={<AssignmentPage />} />
@@ -212,43 +221,5 @@ function TeacherInfoModal({
         </Container>
       </Modal.Body>
     </Modal>
-  );
-}
-
-function StudentItem() {
-  const [isAttend, setIsAttend] = useState(false);
-  return (
-    <ListGroup.Item>
-      <Row>
-        <Col xl={1} xxl={1}>
-          <Image
-            src={require("../../Assets/userPlaceholder.jpg")}
-            fluid
-            roundedCircle
-          />
-        </Col>
-        <Col xl={8} xxl={8}>
-          Vu Cong Long
-        </Col>
-        <Col xl={3} xxl={3}>
-          <Row>
-            <Col xl={4} xxl={4} style={{ color: isAttend ? "gray" : "red" }}>
-              Absent
-            </Col>
-            <Col xl={4} xxl={4}>
-              <Form.Check
-                type="switch"
-                onChange={(evt) => {
-                  setIsAttend(evt.target.checked);
-                }}
-              />
-            </Col>
-            <Col xl={4} xxl={4} style={{ color: isAttend ? "green" : "gray" }}>
-              Attended
-            </Col>
-          </Row>
-        </Col>
-      </Row>
-    </ListGroup.Item>
   );
 }

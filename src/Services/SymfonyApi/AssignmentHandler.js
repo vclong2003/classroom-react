@@ -115,7 +115,7 @@ export function updateAsm(classId, postId, asmId, asmFileUrl, callback) {
   }
 }
 
-export function deleteAsm(classId, postId, asmId, asmFileUrl, callback) {
+export function deleteAsm(classId, postId, asmId, callback) {
   if (localStorage.getItem("sessionId")) {
     fetch(
       `https://127.0.0.1:8000/api/classroom/${classId}/post/${postId}/assignment/${asmId}`,

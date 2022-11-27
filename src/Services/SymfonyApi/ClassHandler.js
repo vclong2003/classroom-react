@@ -93,7 +93,7 @@ export function joinClass(classId, callback) {
   }
 }
 
-export function getStudentList(classId) {
+export function getStudentList(classId, callback) {
   if (localStorage.getItem("sessionId")) {
     fetch(`https://127.0.0.1:8000/api/classroom/${classId}/student`, {
       method: "GET",
@@ -110,11 +110,38 @@ export function getStudentList(classId) {
       })
       .then((data) => {
         if (data) {
-          //console.log(data);
+          callback(data);
         }
       })
       .catch((err) => {
-        console.log("Error getClassroom:" + err);
+        console.log("Error get student list: " + err);
+      });
+  }
+}
+
+// (remove student)
+export function unjoinClass(classId, studentId, callback) {
+  if (localStorage.getItem("sessionId")) {
+    fetch(
+      `https://127.0.0.1:8000/api/classroom/${classId}/student/${studentId}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          sessionId: localStorage.getItem("sessionId"),
+        },
+      }
+    )
+      .then((response) => {
+        // 200: ok
+        if (response.status === 200) {
+          callback();
+        } else {
+          console.log(response.status);
+        }
+      })
+      .catch((err) => {
+        console.log("Error delete student: " + err);
       });
   }
 }
