@@ -16,6 +16,7 @@ import { getFileName, uploadFile } from "../../Services/Firebase";
 import {
   addAsm,
   getSingleAsm,
+  updateAsm,
 } from "../../Services/SymfonyApi/AssignmentHandler";
 
 export default function StudentAsmPage() {
@@ -46,20 +47,23 @@ export default function StudentAsmPage() {
 
   function AsmDownLoadUrl() {
     const [content, setContent] = useState(<></>);
-    if (asm) {
-      getFileName(asm.fileUrl).then((fileName) => {
-        setContent(
-          <Container className={styles.sumbitedAsmContainer}>
-            <Container>
-              <h5>Submited file</h5>
+    useEffect(() => {
+      if (asm) {
+        getFileName(asm.fileUrl, (name) => {
+          console.log(name);
+          setContent(
+            <Container className={styles.sumbitedAsmContainer}>
+              <Container>
+                <h5>Submited file</h5>
+              </Container>
+              <Container>
+                <a href={asm.fileUrl}>{name}</a>
+              </Container>
             </Container>
-            <Container>
-              <a href={asm.fileUrl}>{fileName}</a>
-            </Container>
-          </Container>
-        );
-      });
-    }
+          );
+        });
+      }
+    }, []);
     return content;
   }
 
@@ -74,7 +78,25 @@ export default function StudentAsmPage() {
         },
         (url) => {
           addAsm(classId, postId, url, () => {
-            console.log("added");
+            initData();
+          });
+        }
+      );
+    }
+  };
+
+  const handleUpdateAsm = () => {
+    if (file && asm) {
+      const folderName = `assignment/${postId}/${uuid()}`;
+      uploadFile(
+        folderName,
+        file,
+        (progress) => {
+          setUploadProgress(progress);
+        },
+        (url) => {
+          updateAsm(classId, postId, asm.id, url, () => {
+            initData();
           });
         }
       );
@@ -106,8 +128,10 @@ export default function StudentAsmPage() {
                   variant="info"
                   now={uploadProgress}
                   style={{
-                    visibility: uploadProgress === 0 ? "hidden" : "unset",
-                    marginBottom: "12px",
+                    visibility:
+                      uploadProgress === 0 || uploadProgress === 100 ? "hidden" : "unset",
+                    marginBottom: "8px",
+                    marginTop: "8px",
                   }}
                 />
                 <Form.Control
@@ -116,12 +140,18 @@ export default function StudentAsmPage() {
                     setFile(evt.target.files[0]);
                   }}
                 />
-                <Button className={styles.submitBtn} onClick={handleAddAsm}>
-                  Submit
-                </Button>
-                <Button className={styles.submitBtn} onClick={handleAddAsm}>
-                  Re-Submit
-                </Button>
+                {asm ? (
+                  <Button
+                    className={styles.submitBtn}
+                    onClick={handleUpdateAsm}
+                  >
+                    Re-Submit
+                  </Button>
+                ) : (
+                  <Button className={styles.submitBtn} onClick={handleAddAsm}>
+                    Submit
+                  </Button>
+                )}
               </Container>
             </Col>
           </Row>

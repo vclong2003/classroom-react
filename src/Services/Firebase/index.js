@@ -55,11 +55,11 @@ export function uploadFile(folderName, file, uploadingCallback, doneCallback) {
   );
 }
 
-export async function getFileName(url) {
-  const fileRef = await ref(storage, url);
+export function getFileName(url, callback) {
+  const fileRef = ref(storage, url);
   if (fileRef) {
-    return fileRef.name;
+    callback(fileRef.name);
   } else {
-    return "untitled";
+    callback("untitled");
   }
 }
