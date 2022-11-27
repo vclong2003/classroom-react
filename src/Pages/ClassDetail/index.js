@@ -13,7 +13,7 @@ import {
 import ListGroup from "react-bootstrap/ListGroup";
 
 import { Route, Routes, useNavigate, useParams } from "react-router-dom";
-import { useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 import PostItem from "./postItem";
 import { getClassDetail } from "../../Services/SymfonyApi/ClassHandler";
@@ -24,6 +24,8 @@ import LoadingSpinner from "../../Components/LoadingAnimation/Spinner";
 import PostWriterPage from "../PostWriter";
 import AssignmentPage from "../Assignment";
 import AllMemberPage from "../AllMembers";
+
+export const ClassInfoContext = createContext();
 
 export default function ClassDetail() {
   const role = useContext(RoleContext);
@@ -81,108 +83,112 @@ export default function ClassDetail() {
   }, []);
 
   return (
-    <Routes>
-      <Route
-        path=""
-        element={
-          pageLoading ? (
-            <LoadingSpinner />
-          ) : (
-            <Container fluid className={styles.container}>
-              <Container className={styles.classInfoContainer}>
-                <Row className={styles.className}>{classInfo.name}</Row>
-                <Row>
-                  <Col xl={1} xxl={1} className={styles.teacherImgContainer}>
-                    <Image
-                      src={
-                        classInfo.teacherImageUrl
-                          ? classInfo.teacherImageUrl
-                          : require("../../Assets/userPlaceholder.png")
-                      }
-                      roundedCircle
-                      fluid
-                      className={styles.teacherImg}
-                    />
-                  </Col>
-                  <Col
-                    xl={6}
-                    xxl={6}
-                    className={styles.teacherName}
+    <ClassInfoContext.Provider value={classInfo}>
+      <Routes>
+        <Route
+          path=""
+          element={
+            pageLoading ? (
+              <LoadingSpinner />
+            ) : (
+              <Container fluid className={styles.container}>
+                <Container className={styles.classInfoContainer}>
+                  <Row className={styles.className}>{classInfo.name}</Row>
+                  <Row>
+                    <Col xl={1} xxl={1} className={styles.teacherImgContainer}>
+                      <Image
+                        src={
+                          classInfo.teacherImageUrl
+                            ? classInfo.teacherImageUrl
+                            : require("../../Assets/userPlaceholder.png")
+                        }
+                        roundedCircle
+                        fluid
+                        className={styles.teacherImg}
+                      />
+                    </Col>
+                    <Col
+                      xl={6}
+                      xxl={6}
+                      className={styles.teacherName}
+                      onClick={() => {
+                        setTeacherInfoModalVisible(true);
+                      }}
+                    >
+                      <div className={styles.teacherNameClickable}>
+                        {classInfo.teacherName}
+                      </div>
+                      <div style={{ width: "6px" }} />
+                      <Badge pill bg="info">
+                        Teacher
+                      </Badge>
+                    </Col>
+                    <Col xl={5} xxl={5} className={styles.classDetail}>
+                      Class ID: {classInfo.id}
+                      <br />
+                      Created: {readableDateTimeConvert(classInfo.startDate)}
+                      <br />
+                      Number of students: {classInfo.studentCount}
+                      <br />
+                    </Col>
+                  </Row>
+                </Container>
+                <Container className={styles.actionBtnContainer}>
+                  <Button
+                    className={styles.actionBtn}
                     onClick={() => {
-                      setTeacherInfoModalVisible(true);
+                      navigate("allMember");
                     }}
                   >
-                    <div className={styles.teacherNameClickable}>
-                      {classInfo.teacherName}
-                    </div>
-                    <div style={{ width: "6px" }} />
-                    <Badge pill bg="info">
-                      Teacher
-                    </Badge>
-                  </Col>
-                  <Col xl={5} xxl={5} className={styles.classDetail}>
-                    Class ID: {classInfo.id}
-                    <br />
-                    Created: {readableDateTimeConvert(classInfo.startDate)}
-                    <br />
-                    Number of students: {classInfo.studentCount}
-                    <br />
-                  </Col>
-                </Row>
-              </Container>
-              <Container className={styles.actionBtnContainer}>
-                <Button
-                  className={styles.actionBtn}
-                  onClick={() => {
-                    navigate("allMember");
-                  }}
-                >
-                  View all members
-                </Button>
-                <ProtectedContent>
-                  <Button className={styles.actionBtn}>Take attendance</Button>
-                </ProtectedContent>
-              </Container>
-              {postLoading ? (
-                <LoadingSpinner />
-              ) : (
-                <Container>
-                  {/* RENDER POST ITEMS HERE */}
-                  {postList.map((item, index) => {
-                    return <PostItem data={item} key={index} />;
-                  })}
+                    View all members
+                  </Button>
+                  <ProtectedContent>
+                    <Button className={styles.actionBtn}>
+                      Take attendance
+                    </Button>
+                  </ProtectedContent>
                 </Container>
-              )}
-              <ProtectedContent>
-                <Button
-                  className={styles.addPostBtn}
-                  onClick={() => {
-                    navigate("post/add");
+                {postLoading ? (
+                  <LoadingSpinner />
+                ) : (
+                  <Container>
+                    {/* RENDER POST ITEMS HERE */}
+                    {postList.map((item, index) => {
+                      return <PostItem data={item} key={index} />;
+                    })}
+                  </Container>
+                )}
+                <ProtectedContent>
+                  <Button
+                    className={styles.addPostBtn}
+                    onClick={() => {
+                      navigate("post/add");
+                    }}
+                  >
+                    <i className="bi bi-pencil-square"></i>
+                  </Button>
+                </ProtectedContent>
+                <TeacherInfoModal
+                  teacherInfo={{
+                    teacherEmail: classInfo.teacherEmail,
+                    teacherName: classInfo.teacherName,
+                    teacherPhoneNumber: classInfo.teacherPhoneNumber,
                   }}
-                >
-                  <i className="bi bi-pencil-square"></i>
-                </Button>
-              </ProtectedContent>
-              <TeacherInfoModal
-                teacherInfo={{
-                  teacherEmail: classInfo.teacherEmail,
-                  teacherName: classInfo.teacherName,
-                  teacherPhoneNumber: classInfo.teacherPhoneNumber,
-                }}
-                visible={teacherInfoModalVisible}
-                closeCallback={() => {
-                  setTeacherInfoModalVisible(false);
-                }}
-              />
-            </Container>
-          )
-        }
-      />
-      <Route path="allMember" element={<AllMemberPage />} />
-      <Route path="post/add" element={<PostWriterPage />} />
-      <Route path="post/:postId/edit" element={<PostWriterPage />} />
-      <Route path="post/:postId/assignment" element={<AssignmentPage />} />
-    </Routes>
+                  visible={teacherInfoModalVisible}
+                  closeCallback={() => {
+                    setTeacherInfoModalVisible(false);
+                  }}
+                />
+              </Container>
+            )
+          }
+        />
+        <Route path="allMember" element={<AllMemberPage />} />
+        <Route path="post/add" element={<PostWriterPage />} />
+        <Route path="post/:postId/edit" element={<PostWriterPage />} />
+        <Route path="post/:postId/assignment" element={<AssignmentPage />} />
+      </Routes>
+    </ClassInfoContext.Provider>
   );
 }
 

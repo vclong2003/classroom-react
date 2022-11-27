@@ -1,12 +1,15 @@
 import styles from "./studentPageStyle.module.css";
 import { Container } from "react-bootstrap";
 import { getStudentList } from "../../Services/SymfonyApi/ClassHandler";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { ClassInfoContext } from "../ClassDetail";
 
 export default function StudentAllMemberPage() {
   const params = useParams();
   const classId = params.classId;
+
+  const classInfo = useContext(ClassInfoContext);
 
   const [studentList, setStudentList] = useState([]);
 
