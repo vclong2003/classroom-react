@@ -1,5 +1,6 @@
 import styles from "./studentPageStyle.module.css";
 import {
+  Badge,
   Button,
   Col,
   Container,
@@ -37,6 +38,7 @@ export default function StudentAsmPage() {
       if (data.asmId) {
         getSingleAsm(classId, postId, data.asmId, (asm) => {
           setAsm(asm);
+          console.log(asm);
           setLoading(false);
         });
       } else {
@@ -54,11 +56,20 @@ export default function StudentAsmPage() {
           setContent(
             <Container className={styles.sumbitedAsmContainer}>
               <Container>
-                <h5>Submited file</h5>
+                <h5>Submited file:</h5>
               </Container>
               <Container>
                 <a href={asm.fileUrl}>{name}</a>
               </Container>
+              {asm.mark ? (
+                <Container className={styles.asmMark}>
+                  <Badge pill bg="success">
+                    Mark: {asm.mark}
+                  </Badge>
+                </Container>
+              ) : (
+                ""
+              )}
             </Container>
           );
         });
@@ -129,7 +140,9 @@ export default function StudentAsmPage() {
                   now={uploadProgress}
                   style={{
                     visibility:
-                      uploadProgress === 0 || uploadProgress === 100 ? "hidden" : "unset",
+                      uploadProgress === 0 || uploadProgress === 100
+                        ? "hidden"
+                        : "unset",
                     marginBottom: "8px",
                     marginTop: "8px",
                   }}

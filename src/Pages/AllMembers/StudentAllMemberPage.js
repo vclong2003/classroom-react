@@ -1,9 +1,10 @@
 import styles from "./studentPageStyle.module.css";
-import { Container } from "react-bootstrap";
+import { Container, Image, Ratio } from "react-bootstrap";
 import { getStudentList } from "../../Services/SymfonyApi/ClassHandler";
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { ClassInfoContext } from "../ClassDetail";
+import LoadingSpinner from "../../Components/LoadingAnimation/Spinner";
 
 export default function StudentAllMemberPage() {
   const params = useParams();
@@ -11,13 +12,87 @@ export default function StudentAllMemberPage() {
 
   const classInfo = useContext(ClassInfoContext);
 
+  const [loading, setLoading] = useState(false);
   const [studentList, setStudentList] = useState([]);
 
   useEffect(() => {
+    setLoading(true);
     getStudentList(classId, (data) => {
       setStudentList(data);
-      console.log(data);
+      setLoading(false);
     });
   }, []);
-  return <Container>Student</Container>;
+  return (
+    <Container fluid className={styles.container}>
+      <Container className={styles.sectionTitle}>Teacher</Container>
+      <Container className={styles.teacherItem}>
+        <Ratio aspectRatio="1x1" className={styles.teacherImgContainer}>
+          <Image
+            src={
+              classInfo.teacherImageUrl
+                ? classInfo.teacherImageUrl
+                : require("../../Assets/userPlaceholder.png")
+            }
+            fluid
+            roundedCircle
+          />
+        </Ratio>
+        <div>
+          <Container>
+            <span className={styles.teacherFieldTitle}>Name: </span>
+            {classInfo.teacherName}
+          </Container>
+          <Container>
+            <span className={styles.teacherFieldTitle}>Email: </span>
+            {classInfo.teacherEmail}
+          </Container>
+          <Container>
+            <span className={styles.teacherFieldTitle}>Phone number: </span>
+            {classInfo.teacherPhoneNumber}
+          </Container>
+        </div>
+      </Container>
+      <Container className={styles.sectionTitle}>Students</Container>
+      {loading ? (
+        <LoadingSpinner />
+      ) : (
+        <Container className={styles.studentItemsContainer}>
+          {studentList.map((item, index) => {
+            return <StudentItem data={item} key={index} />;
+          })}
+        </Container>
+      )}
+    </Container>
+  );
+}
+
+function StudentItem({
+  data = {
+    email: "",
+    imageUrl: null,
+    name: "",
+  },
+}) {
+  return (
+    <Container className={styles.studentItem}>
+      <Container className={styles.studentInfoContainer}>
+        <Ratio aspectRatio="1x1" className={styles.studentImgContainer}>
+          <Image
+            src={
+              data.imageUrl
+                ? data.imageUrl
+                : require("../../Assets/userPlaceholder.png")
+            }
+            fluid
+            roundedCircle
+          />
+        </Ratio>
+        <div className={styles.studentName}>{data.name}</div>
+      </Container>
+      <Container>
+        <span className={styles.studentItemFieldTitle}>Email: </span>
+        {data.email}
+      </Container>
+    </Container>
+  );
 }

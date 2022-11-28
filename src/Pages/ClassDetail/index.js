@@ -5,7 +5,6 @@ import {
   CloseButton,
   Col,
   Container,
-  Form,
   Image,
   Modal,
   Row,
@@ -16,7 +15,10 @@ import { Route, Routes, useNavigate, useParams } from "react-router-dom";
 import { createContext, useContext, useEffect, useState } from "react";
 
 import PostItem from "./postItem";
-import { getClassDetail } from "../../Services/SymfonyApi/ClassHandler";
+import {
+  getClassDetail,
+  unjoinClass,
+} from "../../Services/SymfonyApi/ClassHandler";
 import { readableDateTimeConvert } from "../../Components/ReadableDateTimeConverter";
 import { getPosts } from "../../Services/SymfonyApi/PostHandler";
 import { RoleContext } from "../..";
@@ -41,6 +43,7 @@ export default function ClassDetail() {
   }
 
   const params = useParams();
+  const classId = params.classId;
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
@@ -56,14 +59,13 @@ export default function ClassDetail() {
     teacherPhoneNumber: "",
   });
   const [postList, setPostList] = useState([]);
-
   const [teacherInfoModalVisible, setTeacherInfoModalVisible] = useState(false);
   const [pageLoading, setPageLoading] = useState(false);
   const [postLoading, setPostLoading] = useState(false);
 
   const fetchClassDetail = () => {
     setPageLoading(true);
-    getClassDetail(params.classId, (info) => {
+    getClassDetail(classId, (info) => {
       setClassInfo(info);
       setPageLoading(false);
     });
@@ -71,10 +73,23 @@ export default function ClassDetail() {
 
   const fetchPosts = () => {
     setPostLoading(true);
-    getPosts(params.classId, (data) => {
+    getPosts(classId, (data) => {
       setPostList(data);
       setPostLoading(false);
     });
+  };
+
+  const handleViewAllMemberBtn = () => {
+    navigate("allMember");
+  };
+  const handleExitClass = () => {
+    unjoinClass(classId, null, () => {
+      navigate(-1);
+    });
+  };
+  const handleTakeAttendanceBtn = () => {};
+  const handleAddPostBtn = () => {
+    navigate("post/add");
   };
 
   useEffect(() => {
@@ -136,12 +151,18 @@ export default function ClassDetail() {
                 <Container className={styles.actionBtnContainer}>
                   <Button
                     className={styles.actionBtn}
-                    onClick={() => {
-                      navigate("allMember");
-                    }}
+                    onClick={handleViewAllMemberBtn}
                   >
                     View all members
                   </Button>
+                  <ExcludeContent>
+                    <Button
+                      className={styles.actionBtn}
+                      onClick={handleExitClass}
+                    >
+                      Exit class <i className="bi bi-box-arrow-right"></i>
+                    </Button>
+                  </ExcludeContent>
                   <ProtectedContent>
                     <Button className={styles.actionBtn}>
                       Take attendance
@@ -161,9 +182,7 @@ export default function ClassDetail() {
                 <ProtectedContent>
                   <Button
                     className={styles.addPostBtn}
-                    onClick={() => {
-                      navigate("post/add");
-                    }}
+                    onClick={handleAddPostBtn}
                   >
                     <i className="bi bi-pencil-square"></i>
                   </Button>

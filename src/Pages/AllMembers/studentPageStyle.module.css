@@ -1,0 +1,86 @@
+.container {
+  min-height: 100vh;
+  background-color: #f7f8ff;
+  padding-top: 20px;
+  padding-bottom: 50px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+.sectionTitle {
+  font-size: 30px;
+  padding-bottom: 2px;
+  margin-bottom: 15px;
+  font-weight: 500;
+  font-style: italic;
+  border-bottom: 3px solid #5453829f;
+}
+
+.teacherItem {
+  background-color: #fff;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  margin-bottom: 15px;
+}
+.teacherImgContainer {
+  width: 10%;
+  margin-right: 1%;
+}
+.teacherFieldTitle {
+  font-size: 18px;
+  font-style: italic;
+  font-weight: 500;
+  color: #545382;
+}
+
+.studentItemsContainer {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  padding: 0;
+  justify-content: space-between;
+}
+
+.studentItem {
+  width: 32%;
+  background-color: #fff;
+  margin-bottom: 15px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  border-radius: 15px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+  margin-left: 0;
+  margin-right: 0;
+}
+.studentInfoContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.studentImgContainer {
+  width: 25%;
+}
+.studentName {
+  font-size: 18px;
+  margin-left: 8px;
+  font-weight: 400;
+}
+.studentItemFieldTitle {
+  font-size: 18px;
+  font-style: italic;
+  font-weight: 500;
+  color: #545382;
+}
+.studentItemActionBtn {
+  background-color: #545382;
+  border: none;
+  outline: none;
+  margin-top: 10px;
+  border-radius: 18px;
+  padding-left: 15px;
+  padding-right: 15px;
+}

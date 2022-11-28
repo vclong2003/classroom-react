@@ -117,7 +117,7 @@ export default function PostItem({
         <ExcludeContent>
           {data.isAssignment ? (
             <Button className={styles.actionBtn} onClick={handleSubmitAsmBtn}>
-              {data.asmId ? "Edit submission" : "Submit"}
+              {data.asmId ? "View submission" : "Submit"}
             </Button>
           ) : (
             <div />
