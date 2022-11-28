@@ -40,7 +40,13 @@ export default function NavBar() {
               <div />
             ) : (
               <NavDropdown title={userName} className={styles.navLink}>
-                <NavDropdown.Item href="#action/3.1">Profile</NavDropdown.Item>
+                <NavDropdown.Item
+                  onClick={() => {
+                    navigate("/profile");
+                  }}
+                >
+                  Profile
+                </NavDropdown.Item>
                 <NavDropdown.Divider />
                 <NavDropdown.Item
                   onClick={() => {

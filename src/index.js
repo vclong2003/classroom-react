@@ -14,6 +14,7 @@ import { getRole } from "./Services/SymfonyApi/AuthHandler";
 import AllClassPage from "./Pages/AllClass";
 import "./Assets/Font.css";
 import LoadingSpinner from "./Components/LoadingAnimation/Spinner";
+import ProfilePage from "./Pages/Profile";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -46,6 +47,14 @@ function App() {
               </PrivateRoute>
             }
           />
+          <Route
+            path="/profile"
+            element={
+              <PrivateRoute>
+                <ProfilePage />
+              </PrivateRoute>
+            }
+          />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
         </Routes>
@@ -56,7 +65,7 @@ function App() {
 
 function PrivateRoute({ children }) {
   const role = useContext(RoleContext);
-  
+
   if (localStorage.getItem("sessionId") === null) {
     return <Navigate to="/login" />;
   } else {
