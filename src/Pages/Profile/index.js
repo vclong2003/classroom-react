@@ -4,7 +4,6 @@ import {
   Button,
   Container,
   Form,
-  Image,
   Modal,
   Ratio,
 } from "react-bootstrap";
@@ -37,7 +36,6 @@ export default function ProfilePage() {
     getUserInfo((data) => {
       setUserInfo(data);
       setLoading(false);
-      console.log(data);
     });
   };
 
@@ -72,8 +70,8 @@ export default function ProfilePage() {
           userInfo.address,
           url,
           () => {
-            setAvaFilePickerVisible(false);
             setUserInfo({ ...userInfo, imageUrl: url });
+            setAvaFilePickerVisible(false);
           }
         );
       }
@@ -154,6 +152,12 @@ export default function ProfilePage() {
 function AvatarFilePicker({ visible, handleClose, handleUpdate }) {
   const [file, setFile] = useState(null);
 
+  useEffect(() => {
+    if (visible === false) {
+      setFile(null);
+    }
+  }, [visible]);
+
   const handleSaveBtn = () => {
     if (file) {
       handleUpdate(file);
@@ -163,6 +167,13 @@ function AvatarFilePicker({ visible, handleClose, handleUpdate }) {
   return (
     <Modal show={visible} onHide={handleClose}>
       <Modal.Body>
+        {file ? (
+          <Ratio aspectRatio="1x1" className={styles.avatarPreviewContainer}>
+            <AvatarItem source={URL.createObjectURL(file)} />
+          </Ratio>
+        ) : (
+          ""
+        )}
         <Form.Control
           type="file"
           accept="image/*"
@@ -174,7 +185,12 @@ function AvatarFilePicker({ visible, handleClose, handleUpdate }) {
         <Button className={styles.editInfoBtn} onClick={handleSaveBtn}>
           Save
         </Button>
-        <Button className={styles.editInfoBtn} onClick={handleClose}>
+        <Button
+          className={styles.editInfoBtn}
+          onClick={() => {
+            handleClose();
+          }}
+        >
           Cancel
         </Button>
       </Modal.Body>
