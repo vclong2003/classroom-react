@@ -25,3 +25,40 @@ export function getUserInfo(callback) {
       });
   }
 }
+
+export function updateUserInfo(
+  name,
+  dob,
+  phoneNumber,
+  address,
+  imageUrl,
+  callback
+) {
+  if (localStorage.getItem("sessionId")) {
+    fetch("https://127.0.0.1:8000/api/user", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        sessionId: localStorage.getItem("sessionId"),
+      },
+      body: JSON.stringify({
+        name: name,
+        dob: dob,
+        phoneNumber: phoneNumber,
+        address: address,
+        imageUrl: imageUrl,
+      }),
+    })
+      .then((response) => {
+        // 200: ok
+        if (response.status === 200) {
+          callback();
+        } else {
+          console.log(response.status);
+        }
+      })
+      .catch((err) => {
+        console.log("Error update user info: " + err);
+      });
+  }
+}

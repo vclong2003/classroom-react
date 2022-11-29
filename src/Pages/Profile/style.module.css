@@ -9,6 +9,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-bottom: 12px;
 }
 .avatar {
   width: 15%;
@@ -24,6 +25,30 @@
   color: rgb(255, 255, 255);
 }
 .name {
+  margin-top: 10px;
   font-size: 25px;
   font-weight: 500;
+}
+.fieldTitle {
+  font-size: 22px;
+  color: #545382;
+  font-weight: 500;
+  font-style: italic;
+}
+.infoField {
+  margin-bottom: 3px;
+  font-size: 18px;
+}
+.editInfoBtn {
+  border-radius: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+  border: none;
+  outline: none;
+  background-color: #545382;
+  margin-top: 6px;
+  margin-right: 5px;
+}
+.editorInput{
+  border-radius: 20px;
 }
