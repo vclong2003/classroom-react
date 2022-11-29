@@ -16,6 +16,7 @@ export default function PostItem({
     asmId: null,
     submitCount: 0,
   },
+  postsRefresher,
 }) {
   const navigate = useNavigate();
   const params = useParams();
@@ -41,7 +42,7 @@ export default function PostItem({
   const handleDeletePost = () => {
     deletePost(classId, data.id, () => {
       setDeleteModalVisible(false);
-      console.log("post deleted!");
+      postsRefresher();
     });
   };
   const handleSubmitAsmBtn = () => {

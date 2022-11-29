@@ -1,12 +1,13 @@
 import styles from "./classroomItemStyle.module.css";
 import Badge from "react-bootstrap/Badge";
-import { Button, Col, Container, Image, Modal, Row } from "react-bootstrap";
+import { Col, Container, Row } from "react-bootstrap";
 import { motion } from "framer-motion";
 import randomColor from "random-color";
 import { readableDateTimeConvert } from "../../Components/ReadableDateTimeConverter";
 import { useContext, useState } from "react";
 import { RoleContext } from "../..";
 import ConfirmationPopup from "../../Components/ComfirmationPopup";
+import AvatarItem from "../../Components/Avatar";
 
 export default function ClassroomItem({
   classInfo,
@@ -54,7 +55,7 @@ export default function ClassroomItem({
         >
           <Row className={styles.teacherInfoContainer}>
             <Col xl={4} xxl={4}>
-              <Image src={data.teacherImageUrl} roundedCircle fluid />
+              <AvatarItem source={data.teacherImageUrl} />
             </Col>
             <Col xl={8} xxl={8} className={styles.teacherName}>
               {data.teacherName}

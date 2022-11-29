@@ -17,6 +17,7 @@ import { useParams } from "react-router-dom";
 import { getFileName } from "../../Services/Firebase";
 import { readableDateTimeConvert } from "../../Components/ReadableDateTimeConverter";
 import LoadingSpinner from "../../Components/LoadingAnimation/Spinner";
+import AvatarItem from "../../Components/Avatar";
 
 export default function TeacherAsmPage() {
   const params = useParams();
@@ -96,15 +97,7 @@ function AsmItem({
       <Row className={styles.studentInfoContainer}>
         <Col xl={2} xxl={2}>
           <Ratio aspectRatio="1x1">
-            <Image
-              src={
-                data.userImageUrl
-                  ? data.userImageUrl
-                  : require("../../Assets/userPlaceholder.png")
-              }
-              fluid
-              roundedCircle
-            />
+            <AvatarItem source={data.userImageUrl} />
           </Ratio>
         </Col>
         <Col xl={10} xxl={10} className={styles.studentName}>

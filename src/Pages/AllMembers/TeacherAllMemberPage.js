@@ -8,6 +8,7 @@ import {
 } from "../../Services/SymfonyApi/ClassHandler";
 import LoadingSpinner from "../../Components/LoadingAnimation/Spinner";
 import ConfirmationPopup from "../../Components/ComfirmationPopup";
+import AvatarItem from "../../Components/Avatar";
 
 export default function TeacherAllMemberPage() {
   const params = useParams();
@@ -37,7 +38,14 @@ export default function TeacherAllMemberPage() {
         ) : (
           <Accordion>
             {studentList.map((item, index) => {
-              return <StudentItem data={item} key={index} classId={classId} />;
+              return (
+                <StudentItem
+                  data={item}
+                  key={index}
+                  classId={classId}
+                  studentListRefresher={fetchStudentList}
+                />
+              );
             })}
           </Accordion>
         )}
@@ -58,11 +66,12 @@ function StudentItem({
     userId: 32,
   },
   classId,
+  studentListRefresher,
 }) {
   const [confirmPopupVisible, setConfirmPopupVisible] = useState(false);
   const handleRemoveStudent = () => {
     unjoinClass(classId, data.userId, () => {
-      console.log("removed");
+      studentListRefresher();
     });
   };
 
@@ -71,15 +80,7 @@ function StudentItem({
       <Accordion.Header className={styles.studentItemHeader}>
         <div className={styles.studentImgContainer}>
           <Ratio aspectRatio="1x1">
-            <Image
-              src={
-                data.imageUrl
-                  ? data.imageUrl
-                  : require("../../Assets/userPlaceholder.png")
-              }
-              fluid
-              roundedCircle
-            />
+            <AvatarItem source={data.imageUrl} />
           </Ratio>
         </div>
         <div className={styles.studentName}>{data.name}</div>

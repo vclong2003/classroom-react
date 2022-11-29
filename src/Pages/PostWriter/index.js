@@ -14,11 +14,12 @@ import {
 } from "../../Services/SymfonyApi/PostHandler";
 import LoadingSpinner from "../../Components/LoadingAnimation/Spinner";
 
-export default function PostWriterPage() {
+export default function PostWriterPage({ postsRefresher }) {
   const navigate = useNavigate();
   const role = useContext(RoleContext);
 
   const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   const [mode, setMode] = useState("add");
   const [postContent, setPostContent] = useState("");
@@ -39,16 +40,23 @@ export default function PostWriterPage() {
   }, [postId, classId]);
 
   const handleAddPost = () => {
+    setSaving(true);
     addPost(classId, isAsm, postContent, () => {
-      console.log("added!");
+      setSaving(false);
+      navigate(-1);
+      postsRefresher();
     });
   };
   const handleUpdatePost = () => {
     updatePost(classId, postId, isAsm, postContent, () => {
-      console.log("updated!");
+      setSaving(false);
+      navigate(-1);
+      postsRefresher();
     });
   };
-  const handleCancel = () => {};
+  const handleCancel = () => {
+    navigate(-1);
+  };
 
   if (role === "teacher") {
     return loading ? (
@@ -108,14 +116,22 @@ export default function PostWriterPage() {
         </Container>
         <Container className={styles.actionBtnContainer}>
           {mode === "add" ? (
-            <Button className={styles.actionBtn} onClick={handleAddPost}>
+            <Button
+              className={styles.actionBtn}
+              onClick={handleAddPost}
+              disabled={saving}
+            >
               Add
             </Button>
           ) : (
             ""
           )}
           {mode === "update" ? (
-            <Button className={styles.actionBtn} onClick={handleUpdatePost}>
+            <Button
+              className={styles.actionBtn}
+              onClick={handleUpdatePost}
+              disabled={saving}
+            >
               Save changes
             </Button>
           ) : (
@@ -124,6 +140,7 @@ export default function PostWriterPage() {
           <Button
             className={styles.actionBtn}
             style={{ backgroundColor: "gray" }}
+            onClick={handleCancel}
           >
             Cancel
           </Button>

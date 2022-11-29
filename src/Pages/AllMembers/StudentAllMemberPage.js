@@ -5,6 +5,7 @@ import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { ClassInfoContext } from "../ClassDetail";
 import LoadingSpinner from "../../Components/LoadingAnimation/Spinner";
+import AvatarItem from "../../Components/Avatar";
 
 export default function StudentAllMemberPage() {
   const params = useParams();
@@ -27,15 +28,7 @@ export default function StudentAllMemberPage() {
       <Container className={styles.sectionTitle}>Teacher</Container>
       <Container className={styles.teacherItem}>
         <Ratio aspectRatio="1x1" className={styles.teacherImgContainer}>
-          <Image
-            src={
-              classInfo.teacherImageUrl
-                ? classInfo.teacherImageUrl
-                : require("../../Assets/userPlaceholder.png")
-            }
-            fluid
-            roundedCircle
-          />
+          <AvatarItem source={classInfo.teacherImageUrl} />
         </Ratio>
         <div>
           <Container>
@@ -77,15 +70,7 @@ function StudentItem({
     <Container className={styles.studentItem}>
       <Container className={styles.studentInfoContainer}>
         <Ratio aspectRatio="1x1" className={styles.studentImgContainer}>
-          <Image
-            src={
-              data.imageUrl
-                ? data.imageUrl
-                : require("../../Assets/userPlaceholder.png")
-            }
-            fluid
-            roundedCircle
-          />
+          <AvatarItem source={data.imageUrl} />
         </Ratio>
         <div className={styles.studentName}>{data.name}</div>
       </Container>

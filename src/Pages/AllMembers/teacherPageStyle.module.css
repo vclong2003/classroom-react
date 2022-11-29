@@ -18,7 +18,10 @@
 }
 
 .studentImgContainer {
-  width: 6%;
+  width: 8%;
+}
+.studentImgContainer img {
+  object-fit: cover;
 }
 .studentName {
   font-size: 18px;

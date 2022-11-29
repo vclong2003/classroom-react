@@ -9,7 +9,6 @@ import {
   Modal,
   Row,
 } from "react-bootstrap";
-import ListGroup from "react-bootstrap/ListGroup";
 
 import { Route, Routes, useNavigate, useParams } from "react-router-dom";
 import { createContext, useContext, useEffect, useState } from "react";
@@ -26,10 +25,12 @@ import LoadingSpinner from "../../Components/LoadingAnimation/Spinner";
 import PostWriterPage from "../PostWriter";
 import AssignmentPage from "../Assignment";
 import AllMemberPage from "../AllMembers";
+import AttendancePage from "../Attendance";
+import AvatarItem from "../../Components/Avatar";
 
 export const ClassInfoContext = createContext();
 
-export default function ClassDetail() {
+export default function ClassDetail({ classListRefresher }) {
   const role = useContext(RoleContext);
   function ProtectedContent({ children }) {
     if (role === "teacher") {
@@ -85,9 +86,12 @@ export default function ClassDetail() {
   const handleExitClass = () => {
     unjoinClass(classId, null, () => {
       navigate(-1);
+      classListRefresher();
     });
   };
-  const handleTakeAttendanceBtn = () => {};
+  const handleAttendanceBtn = () => {
+    navigate("attendance");
+  };
   const handleAddPostBtn = () => {
     navigate("post/add");
   };
@@ -111,16 +115,7 @@ export default function ClassDetail() {
                   <Row className={styles.className}>{classInfo.name}</Row>
                   <Row>
                     <Col xl={1} xxl={1} className={styles.teacherImgContainer}>
-                      <Image
-                        src={
-                          classInfo.teacherImageUrl
-                            ? classInfo.teacherImageUrl
-                            : require("../../Assets/userPlaceholder.png")
-                        }
-                        roundedCircle
-                        fluid
-                        className={styles.teacherImg}
-                      />
+                      <AvatarItem source={classInfo.teacherImageUrl} />
                     </Col>
                     <Col
                       xl={6}
@@ -164,8 +159,11 @@ export default function ClassDetail() {
                     </Button>
                   </ExcludeContent>
                   <ProtectedContent>
-                    <Button className={styles.actionBtn}>
-                      Take attendance
+                    <Button
+                      className={styles.actionBtn}
+                      onClick={handleAttendanceBtn}
+                    >
+                      Attendance
                     </Button>
                   </ProtectedContent>
                 </Container>
@@ -175,7 +173,13 @@ export default function ClassDetail() {
                   <Container>
                     {/* RENDER POST ITEMS HERE */}
                     {postList.map((item, index) => {
-                      return <PostItem data={item} key={index} />;
+                      return (
+                        <PostItem
+                          data={item}
+                          postsRefresher={fetchPosts}
+                          key={index}
+                        />
+                      );
                     })}
                   </Container>
                 )}
@@ -203,9 +207,19 @@ export default function ClassDetail() {
           }
         />
         <Route path="allMember" element={<AllMemberPage />} />
-        <Route path="post/add" element={<PostWriterPage />} />
-        <Route path="post/:postId/edit" element={<PostWriterPage />} />
-        <Route path="post/:postId/assignment" element={<AssignmentPage />} />
+        <Route path="attendance" element={<AttendancePage />} />
+        <Route
+          path="post/add"
+          element={<PostWriterPage postsRefresher={fetchPosts} />}
+        />
+        <Route
+          path="post/:postId/edit"
+          element={<PostWriterPage postsRefresher={fetchPosts} />}
+        />
+        <Route
+          path="post/:postId/assignment"
+          element={<AssignmentPage postsRefresher={fetchPosts} />}
+        />
       </Routes>
     </ClassInfoContext.Provider>
   );

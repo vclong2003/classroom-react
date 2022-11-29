@@ -156,7 +156,10 @@ export default function AllClassPage() {
           </Container>
         }
       />
-      <Route path=":classId/*" element={<ClassDetail role={role} />} />
+      <Route
+        path=":classId/*"
+        element={<ClassDetail classListRefresher={getClassroomList} />}
+      />
     </Routes>
   );
 }

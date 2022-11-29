@@ -8,7 +8,7 @@ import {
   ProgressBar,
   Row,
 } from "react-bootstrap";
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import LoadingSpinner from "../../Components/LoadingAnimation/Spinner";
 import { useParams } from "react-router-dom";
 import { getSinglePost } from "../../Services/SymfonyApi/PostHandler";
@@ -20,7 +20,7 @@ import {
   updateAsm,
 } from "../../Services/SymfonyApi/AssignmentHandler";
 
-export default function StudentAsmPage() {
+export default function StudentAsmPage({ postsRefresher }) {
   const params = useParams();
   const classId = params.classId;
   const postId = params.postId;
@@ -47,7 +47,7 @@ export default function StudentAsmPage() {
     });
   };
 
-  function AsmDownLoadUrl() {
+  function SubmittedAsm() {
     const [content, setContent] = useState(<></>);
     useEffect(() => {
       if (asm) {
@@ -90,6 +90,7 @@ export default function StudentAsmPage() {
         (url) => {
           addAsm(classId, postId, url, () => {
             initData();
+            postsRefresher();
           });
         }
       );
@@ -132,7 +133,7 @@ export default function StudentAsmPage() {
               />
             </Col>
             <Col xl={3} xxl={3} className={styles.asmContainer}>
-              <AsmDownLoadUrl />
+              <SubmittedAsm />
               <Container>
                 <ProgressBar
                   striped

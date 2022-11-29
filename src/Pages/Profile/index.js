@@ -16,6 +16,8 @@ import {
 import { RoleContext } from "../..";
 import LoadingSpinner from "../../Components/LoadingAnimation/Spinner";
 import { motion } from "framer-motion";
+import { uploadFile } from "../../Services/Firebase";
+import AvatarItem from "../../Components/Avatar";
 
 export default function ProfilePage() {
   const role = useContext(RoleContext);
@@ -28,12 +30,14 @@ export default function ProfilePage() {
     phoneNumber: "",
   });
   const [infoEditorVisible, setInfoEditorVisible] = useState(false);
+  const [avaFilePickerVisible, setAvaFilePickerVisible] = useState(false);
 
   const fetchUserInfo = () => {
     setLoading(true);
     getUserInfo((data) => {
       setUserInfo(data);
       setLoading(false);
+      console.log(data);
     });
   };
 
@@ -48,8 +52,30 @@ export default function ProfilePage() {
       info.address,
       info.imageUrl,
       () => {
-        setUserInfo(info);
+        setUserInfo({ ...userInfo, ...info });
         setInfoEditorVisible(false);
+      }
+    );
+  };
+  const updateAvatar = (file) => {
+    uploadFile(
+      `avatar/${userInfo.userId}`,
+      file,
+      (progress) => {
+        console.log(progress);
+      },
+      (url) => {
+        updateUserInfo(
+          userInfo.name,
+          userInfo.dob,
+          userInfo.phoneNumber,
+          userInfo.address,
+          url,
+          () => {
+            setAvaFilePickerVisible(false);
+            setUserInfo({ ...userInfo, imageUrl: url });
+          }
+        );
       }
     );
   };
@@ -67,19 +93,14 @@ export default function ProfilePage() {
           <Container className={styles.avatarContainer}>
             <Ratio aspectRatio="1x1" className={styles.avatar}>
               <>
-                <Image
-                  fluid
-                  roundedCircle
-                  src={
-                    userInfo.imageUrl
-                      ? userInfo.imageUrl
-                      : require("../../Assets/userPlaceholder.png")
-                  }
-                />
+                <AvatarItem source={userInfo.imageUrl} />
                 <motion.button
                   initial={{ opacity: 0 }}
                   whileHover={{ opacity: 1 }}
                   className={styles.editAvatarBtn}
+                  onClick={() => {
+                    setAvaFilePickerVisible(true);
+                  }}
                 >
                   <i className="bi bi-pencil-square"></i>
                 </motion.button>
@@ -109,6 +130,13 @@ export default function ProfilePage() {
               Edit
             </Button>
           </Container>
+          <AvatarFilePicker
+            visible={avaFilePickerVisible}
+            handleClose={() => {
+              setAvaFilePickerVisible(false);
+            }}
+            handleUpdate={updateAvatar}
+          />
           <InfoEditor
             initValue={userInfo}
             visible={infoEditorVisible}
@@ -120,6 +148,37 @@ export default function ProfilePage() {
         </>
       )}
     </Container>
+  );
+}
+
+function AvatarFilePicker({ visible, handleClose, handleUpdate }) {
+  const [file, setFile] = useState(null);
+
+  const handleSaveBtn = () => {
+    if (file) {
+      handleUpdate(file);
+    }
+  };
+
+  return (
+    <Modal show={visible} onHide={handleClose}>
+      <Modal.Body>
+        <Form.Control
+          type="file"
+          accept="image/*"
+          onChange={(evt) => {
+            setFile(evt.target.files[0]);
+          }}
+          className={styles.avatarFileInput}
+        />
+        <Button className={styles.editInfoBtn} onClick={handleSaveBtn}>
+          Save
+        </Button>
+        <Button className={styles.editInfoBtn} onClick={handleClose}>
+          Cancel
+        </Button>
+      </Modal.Body>
+    </Modal>
   );
 }
 
@@ -145,7 +204,7 @@ function InfoEditor({ initValue, visible, handleClose, handleUpdate }) {
               type="text"
               placeholder="Enter name"
               className={styles.editorInput}
-              value={info.name}
+              value={info.name ? info.name : ""}
               onChange={(evt) => {
                 setInfo({ ...info, name: evt.target.value });
               }}
@@ -168,7 +227,7 @@ function InfoEditor({ initValue, visible, handleClose, handleUpdate }) {
               type="text"
               placeholder="Enter phone number"
               className={styles.editorInput}
-              value={info.phoneNumber}
+              value={info.phoneNumber ? info.phoneNumber : ""}
               onChange={(evt) => {
                 setInfo({ ...info, phoneNumber: evt.target.value });
               }}
@@ -180,7 +239,7 @@ function InfoEditor({ initValue, visible, handleClose, handleUpdate }) {
               type="text"
               placeholder="Enter address"
               className={styles.editorInput}
-              value={info.address}
+              value={info.address ? info.address : ""}
               onChange={(evt) => {
                 setInfo({ ...info, address: evt.target.value });
               }}
