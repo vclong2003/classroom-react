@@ -77,3 +77,33 @@ export function getAttendances(classId, classSessionId, callback) {
       });
   }
 }
+
+export function getAttendanceSummerization(classId, callback) {
+  if (localStorage.getItem("sessionId")) {
+    fetch(
+      `https://127.0.0.1:8000/api/classroom/${classId}/adtendanceSummarization`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          sessionId: localStorage.getItem("sessionId"),
+        },
+      }
+    )
+      .then((response) => {
+        if (response.status === 200) {
+          return response.json();
+        } else {
+          console.log(response.status);
+        }
+      })
+      .then((data) => {
+        if (data) {
+          callback(data);
+        }
+      })
+      .catch((err) => {
+        console.log("Error get attendance summerization " + err);
+      });
+  }
+}

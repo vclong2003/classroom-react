@@ -19,8 +19,28 @@ import {
   addAttendanceRecord,
   getAttendanceGroup,
   getAttendances,
+  getAttendanceSummerization,
 } from "../../Services/SymfonyApi/AttendanceHandler";
 import { readableDateTimeConvert } from "../../Components/ReadableDateTimeConverter";
+import { Bar } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 export default function AttendancePage() {
   const navigate = useNavigate();
@@ -57,13 +77,25 @@ export default function AttendancePage() {
     });
   };
 
+  const [loadingAtdSum, setLoadingAtdSum] = useState(false);
+  const [loadingAtdGroup, setLoadingAtdGroup] = useState(false);
   const [attendanceResultModalVisible, setAttendanceResultModalVisible] =
     useState(false);
   const [attendanceGroupList, setAttendanceGroupList] = useState([]);
   const [attendanceResultList, setAttendanceResultList] = useState([]);
+  const [attendanceSummerization, setAttendanceSummerization] = useState({});
   const fetchAttendanceGroupList = () => {
+    setLoadingAtdGroup(true);
     getAttendanceGroup(classId, (data) => {
       setAttendanceGroupList(data);
+      setLoadingAtdGroup(false);
+    });
+  };
+  const fetchAttendanceSummerization = () => {
+    setLoadingAtdSum(true);
+    getAttendanceSummerization(classId, (data) => {
+      setAttendanceSummerization(data);
+      setLoadingAtdSum(false);
     });
   };
 
@@ -166,11 +198,41 @@ export default function AttendancePage() {
     );
   }
 
+  function BarChart() {
+    return (
+      <Bar
+        options={{
+          responsive: true,
+          plugins: {
+            legend: {
+              position: "top",
+            },
+            title: {
+              display: true,
+              text: "Attendance summerization",
+            },
+          },
+        }}
+        data={{
+          labels: Object.keys(attendanceSummerization),
+          datasets: [
+            {
+              label: "Attended (%)",
+              data: Object.values(attendanceSummerization),
+              backgroundColor: "#5A6A99",
+            },
+          ],
+        }}
+      />
+    );
+  }
+
   useEffect(() => {
     fetchStudentList();
   }, []);
   useEffect(() => {
     if (activeTab === "viewAttendance") {
+      fetchAttendanceSummerization();
       fetchAttendanceGroupList();
     }
   }, [activeTab]);
@@ -232,11 +294,22 @@ export default function AttendancePage() {
               )}
             </Tab.Pane>
             <Tab.Pane eventKey="viewAttendance">
-              <Container>
-                {attendanceGroupList.map((item, index) => {
-                  return <AttendanceGroupItem data={item} key={index} />;
-                })}
-              </Container>
+              {loadingAtdSum ? (
+                <LoadingSpinner />
+              ) : (
+                <Container className={styles.chartContainer}>
+                  <BarChart />
+                </Container>
+              )}
+              {loadingAtdGroup ? (
+                <LoadingSpinner />
+              ) : (
+                <Container>
+                  {attendanceGroupList.map((item, index) => {
+                    return <AttendanceGroupItem data={item} key={index} />;
+                  })}
+                </Container>
+              )}
               <Modal
                 show={attendanceResultModalVisible}
                 onHide={() => {
