@@ -38,7 +38,7 @@ export default function ClassroomItem({
     }
   };
 
-  let color = randomColor(0.45, 0.9);
+  let color = randomColor(0.5, 0.9);
   return (
     <>
       <motion.div

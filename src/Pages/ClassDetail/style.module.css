@@ -136,9 +136,9 @@
   vertical-align: -0.4em;
 }
 .postContent img {
-  margin-left: 0.5%;
-  margin-right: 0.5%;
-  width: 99%;
+  margin: auto;
+  display: block;
+  max-width: 95%;
   border-radius: 8px;
 }
 .postContentCollapse {

@@ -198,35 +198,6 @@ export default function AttendancePage() {
     );
   }
 
-  function BarChart() {
-    return (
-      <Bar
-        options={{
-          responsive: true,
-          plugins: {
-            legend: {
-              position: "top",
-            },
-            title: {
-              display: true,
-              text: "Attendance summerization",
-            },
-          },
-        }}
-        data={{
-          labels: Object.keys(attendanceSummerization),
-          datasets: [
-            {
-              label: "Attended (%)",
-              data: Object.values(attendanceSummerization),
-              backgroundColor: "#5A6A99",
-            },
-          ],
-        }}
-      />
-    );
-  }
-
   useEffect(() => {
     fetchStudentList();
   }, []);
@@ -298,7 +269,27 @@ export default function AttendancePage() {
                 <LoadingSpinner />
               ) : (
                 <Container className={styles.chartContainer}>
-                  <BarChart />
+                  <Bar
+                    options={{
+                      responsive: true,
+                      plugins: {
+                        title: {
+                          display: true,
+                          text: "Attendance summerization",
+                        },
+                      },
+                    }}
+                    data={{
+                      labels: Object.keys(attendanceSummerization),
+                      datasets: [
+                        {
+                          label: "Attended (%)",
+                          data: Object.values(attendanceSummerization),
+                          backgroundColor: "#6C5A99",
+                        },
+                      ],
+                    }}
+                  />
                 </Container>
               )}
               {loadingAtdGroup ? (
