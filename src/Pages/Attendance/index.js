@@ -14,17 +14,21 @@ import { useNavigate, useParams } from "react-router-dom";
 import { RoleContext } from "../..";
 import AvatarItem from "../../Components/Avatar";
 import { getStudentList } from "../../Services/SymfonyApi/ClassHandler";
+import LoadingSpinner from "../../Components/LoadingAnimation/Spinner";
 
 export default function AttendancePage() {
   const navigate = useNavigate();
   const params = useParams();
   const classId = params.classId;
   const role = useContext(RoleContext);
+  const [loadingStudentList, setLoadingStudentList] = useState(false);
 
   const [studentList, setStudentList] = useState([]);
   const fetchStudentList = () => {
+    setLoadingStudentList(true);
     getStudentList(classId, (data) => {
       setStudentList(data);
+      setLoadingStudentList(false);
     });
   };
 
@@ -83,11 +87,15 @@ export default function AttendancePage() {
           </Container>
           <Tab.Content>
             <Tab.Pane eventKey="takeAttendance">
-              <Container className={styles.studentItemContainer}>
-                {studentList.map((item, index) => {
-                  return <StudentItem studentData={item} key={index} />;
-                })}
-              </Container>
+              {loadingStudentList ? (
+                <LoadingSpinner />
+              ) : (
+                <Container className={styles.studentItemContainer}>
+                  {studentList.map((item, index) => {
+                    return <StudentItem studentData={item} key={index} />;
+                  })}
+                </Container>
+              )}
               <Container>
                 <Button className={styles.btn}>Add record</Button>
               </Container>
