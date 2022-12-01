@@ -105,7 +105,7 @@ export default function AllClassPage() {
                   <motion.div
                     initial={{ borderRadius: "10px" }}
                     whileHover={{
-                      rotate: 180,
+                      scale: 1.1,
                     }}
                     whileTap={{ scale: 0.8 }}
                     className={styles.addBtn}

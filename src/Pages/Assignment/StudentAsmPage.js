@@ -26,6 +26,7 @@ export default function StudentAsmPage({ postsRefresher }) {
   const postId = params.postId;
 
   const [loading, setLoading] = useState(false);
+  const [savingAsm, setSavingAsm] = useState(false);
   const [postData, setPostData] = useState("");
   const [file, setFile] = useState(null);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -38,7 +39,6 @@ export default function StudentAsmPage({ postsRefresher }) {
       if (data.asmId) {
         getSingleAsm(classId, postId, data.asmId, (asm) => {
           setAsm(asm);
-          console.log(asm);
           setLoading(false);
         });
       } else {
@@ -52,7 +52,6 @@ export default function StudentAsmPage({ postsRefresher }) {
     useEffect(() => {
       if (asm) {
         getFileName(asm.fileUrl, (name) => {
-          console.log(name);
           setContent(
             <Container className={styles.sumbitedAsmContainer}>
               <Container>
@@ -80,6 +79,7 @@ export default function StudentAsmPage({ postsRefresher }) {
 
   const handleAddAsm = () => {
     if (file) {
+      setSavingAsm(true);
       const folderName = `assignment/${postId}/${uuid()}`;
       uploadFile(
         folderName,
@@ -89,6 +89,7 @@ export default function StudentAsmPage({ postsRefresher }) {
         },
         (url) => {
           addAsm(classId, postId, url, () => {
+            setSavingAsm(false);
             initData();
             postsRefresher();
           });
@@ -99,6 +100,7 @@ export default function StudentAsmPage({ postsRefresher }) {
 
   const handleUpdateAsm = () => {
     if (file && asm) {
+      setSavingAsm(true);
       const folderName = `assignment/${postId}/${uuid()}`;
       uploadFile(
         folderName,
@@ -108,6 +110,7 @@ export default function StudentAsmPage({ postsRefresher }) {
         },
         (url) => {
           updateAsm(classId, postId, asm.id, url, () => {
+            setSavingAsm(false);
             initData();
           });
         }
@@ -144,8 +147,8 @@ export default function StudentAsmPage({ postsRefresher }) {
                       uploadProgress === 0 || uploadProgress === 100
                         ? "hidden"
                         : "unset",
-                    marginBottom: "8px",
-                    marginTop: "8px",
+                    marginBottom: "6px",
+                    marginTop: "6px",
                   }}
                 />
                 <Form.Control
@@ -158,12 +161,17 @@ export default function StudentAsmPage({ postsRefresher }) {
                   <Button
                     className={styles.submitBtn}
                     onClick={handleUpdateAsm}
+                    disabled={savingAsm}
                   >
-                    Re-Submit
+                    {savingAsm ? "Saving..." : "Re-Submit"}
                   </Button>
                 ) : (
-                  <Button className={styles.submitBtn} onClick={handleAddAsm}>
-                    Submit
+                  <Button
+                    className={styles.submitBtn}
+                    disabled={savingAsm}
+                    onClick={handleAddAsm}
+                  >
+                    {savingAsm ? "Saving..." : "Submit"}
                   </Button>
                 )}
               </Container>
