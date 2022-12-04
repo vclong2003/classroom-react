@@ -5,17 +5,25 @@ import {
   CloseButton,
   Col,
   Container,
+  Dropdown,
   Image,
   Modal,
   Row,
 } from "react-bootstrap";
 
 import { Route, Routes, useNavigate, useParams } from "react-router-dom";
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  forwardRef,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 import PostItem from "./postItem";
 import {
   getClassDetail,
+  removeClassroom,
   unjoinClass,
 } from "../../Services/SymfonyApi/ClassHandler";
 import { readableDateTimeConvert } from "../../Components/ReadableDateTimeConverter";
@@ -27,6 +35,7 @@ import AssignmentPage from "../Assignment";
 import AllMemberPage from "../AllMembers";
 import AttendancePage from "../Attendance";
 import AvatarItem from "../../Components/Avatar";
+import ConfirmationPopup from "../../Components/ComfirmationPopup";
 
 export const ClassInfoContext = createContext();
 
@@ -42,12 +51,10 @@ export default function ClassDetail({ classListRefresher }) {
       return children;
     }
   }
-
   const params = useParams();
   const classId = params.classId;
   const navigate = useNavigate();
 
-  const [loading, setLoading] = useState(false);
   const [classInfo, setClassInfo] = useState({
     id: 0,
     name: "",
@@ -61,14 +68,30 @@ export default function ClassDetail({ classListRefresher }) {
   });
   const [postList, setPostList] = useState([]);
   const [teacherInfoModalVisible, setTeacherInfoModalVisible] = useState(false);
-  const [pageLoading, setPageLoading] = useState(false);
+  const [renamePopupVisible, setRenamePopupVisible] = useState(false);
+  const [classDetailLoading, setClassDetailLoading] = useState(false);
   const [postLoading, setPostLoading] = useState(false);
 
+  const customDropdownTriggerBtn = forwardRef(({ children, onClick }, ref) => {
+    return (
+      <div
+        className={styles.customDropdownTriggerBtn}
+        ref={ref}
+        onClick={(e) => {
+          e.preventDefault();
+          onClick(e);
+        }}
+      >
+        {children}
+      </div>
+    );
+  });
+
   const fetchClassDetail = () => {
-    setPageLoading(true);
+    setClassDetailLoading(true);
     getClassDetail(classId, (info) => {
       setClassInfo(info);
-      setPageLoading(false);
+      setClassDetailLoading(false);
     });
   };
 
@@ -95,6 +118,13 @@ export default function ClassDetail({ classListRefresher }) {
   const handleAddPostBtn = () => {
     navigate("post/add");
   };
+  const handleUpdateClassBtn = () => {};
+  const handleRemoveClass = () => {
+    removeClassroom(classId, () => {
+      classListRefresher();
+      navigate(-1);
+    });
+  };
 
   useEffect(() => {
     fetchClassDetail();
@@ -107,12 +137,40 @@ export default function ClassDetail({ classListRefresher }) {
         <Route
           path=""
           element={
-            pageLoading ? (
-              <LoadingSpinner />
-            ) : (
-              <Container fluid className={styles.container}>
+            <Container fluid className={styles.container}>
+              <Container className={styles.header}>
+                <div className={styles.className}>{classInfo.name}</div>
+                <div>
+                  <Dropdown>
+                    <Dropdown.Toggle as={customDropdownTriggerBtn}>
+                      <i className="bi bi-three-dots-vertical"></i>
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu>
+                      <Dropdown.Item>Rename</Dropdown.Item>
+                      <Dropdown.Item
+                        onClick={() => {
+                          setRenamePopupVisible(true);
+                        }}
+                      >
+                        Remove this class
+                      </Dropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown>
+                  <ConfirmationPopup
+                    visible={renamePopupVisible}
+                    message="Do you really want to remove this class?"
+                    handleClose={() => {
+                      setRenamePopupVisible(false);
+                    }}
+                    handleConfirm={handleRemoveClass}
+                  />
+                </div>
+                <ProtectedContent></ProtectedContent>
+              </Container>
+              {classDetailLoading ? (
+                <LoadingSpinner />
+              ) : (
                 <Container className={styles.classInfoContainer}>
-                  <Row className={styles.className}>{classInfo.name}</Row>
                   <Row>
                     <Col xl={1} xxl={1} className={styles.teacherImgContainer}>
                       <AvatarItem source={classInfo.teacherImageUrl} />
@@ -143,67 +201,67 @@ export default function ClassDetail({ classListRefresher }) {
                     </Col>
                   </Row>
                 </Container>
-                <Container className={styles.actionBtnContainer}>
+              )}
+              <Container className={styles.actionBtnContainer}>
+                <Button
+                  className={styles.actionBtn}
+                  onClick={handleViewAllMemberBtn}
+                >
+                  View all members
+                </Button>
+                <ExcludeContent>
                   <Button
                     className={styles.actionBtn}
-                    onClick={handleViewAllMemberBtn}
+                    onClick={handleExitClass}
                   >
-                    View all members
+                    Exit class <i className="bi bi-box-arrow-right"></i>
                   </Button>
-                  <ExcludeContent>
-                    <Button
-                      className={styles.actionBtn}
-                      onClick={handleExitClass}
-                    >
-                      Exit class <i className="bi bi-box-arrow-right"></i>
-                    </Button>
-                  </ExcludeContent>
-                  <ProtectedContent>
-                    <Button
-                      className={styles.actionBtn}
-                      onClick={handleAttendanceBtn}
-                    >
-                      Attendance
-                    </Button>
-                  </ProtectedContent>
-                </Container>
-                {postLoading ? (
-                  <LoadingSpinner />
-                ) : (
-                  <Container>
-                    {/* RENDER POST ITEMS HERE */}
-                    {postList.map((item, index) => {
-                      return (
-                        <PostItem
-                          data={item}
-                          postsRefresher={fetchPosts}
-                          key={index}
-                        />
-                      );
-                    })}
-                  </Container>
-                )}
+                </ExcludeContent>
                 <ProtectedContent>
                   <Button
-                    className={styles.addPostBtn}
-                    onClick={handleAddPostBtn}
+                    className={styles.actionBtn}
+                    onClick={handleAttendanceBtn}
                   >
-                    <i className="bi bi-pencil-square"></i>
+                    Attendance
                   </Button>
                 </ProtectedContent>
-                <TeacherInfoModal
-                  teacherInfo={{
-                    teacherEmail: classInfo.teacherEmail,
-                    teacherName: classInfo.teacherName,
-                    teacherPhoneNumber: classInfo.teacherPhoneNumber,
-                  }}
-                  visible={teacherInfoModalVisible}
-                  closeCallback={() => {
-                    setTeacherInfoModalVisible(false);
-                  }}
-                />
               </Container>
-            )
+              {postLoading ? (
+                <LoadingSpinner />
+              ) : (
+                <Container>
+                  {/* RENDER POST ITEMS HERE */}
+                  {postList.map((item, index) => {
+                    return (
+                      <PostItem
+                        data={item}
+                        postsRefresher={fetchPosts}
+                        key={index}
+                      />
+                    );
+                  })}
+                </Container>
+              )}
+              <ProtectedContent>
+                <Button
+                  className={styles.addPostBtn}
+                  onClick={handleAddPostBtn}
+                >
+                  <i className="bi bi-pencil-square"></i>
+                </Button>
+              </ProtectedContent>
+              <TeacherInfoModal
+                teacherInfo={{
+                  teacherEmail: classInfo.teacherEmail,
+                  teacherName: classInfo.teacherName,
+                  teacherPhoneNumber: classInfo.teacherPhoneNumber,
+                }}
+                visible={teacherInfoModalVisible}
+                closeCallback={() => {
+                  setTeacherInfoModalVisible(false);
+                }}
+              />
+            </Container>
           }
         />
         <Route path="allMember" element={<AllMemberPage />} />

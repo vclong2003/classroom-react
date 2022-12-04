@@ -1,6 +1,8 @@
+import { symfonyApiEndpoint } from "../config";
+
 export function addClassroom(classroomName, callback) {
   if (localStorage.getItem("sessionId")) {
-    fetch("https://127.0.0.1:8000/api/classroom", {
+    fetch(`${symfonyApiEndpoint}/classroom`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -20,9 +22,52 @@ export function addClassroom(classroomName, callback) {
   }
 }
 
+export function updateClassroom(classId, classroomName, callback) {
+  if (localStorage.getItem("sessionId")) {
+    fetch(`${symfonyApiEndpoint}/classroom/${classId}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        sessionId: localStorage.getItem("sessionId"),
+      },
+      body: JSON.stringify({ name: classroomName }),
+    })
+      .then((response) => {
+        if (response.status === 200) {
+          callback();
+        }
+      })
+      .catch((err) => {
+        console.log("Error update classroom:" + err);
+      });
+  }
+}
+
+export function removeClassroom(classId, callback) {
+  if (localStorage.getItem("sessionId")) {
+    fetch(`${symfonyApiEndpoint}/classroom/${classId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        sessionId: localStorage.getItem("sessionId"),
+      },
+    })
+      .then((response) => {
+        if (response.status === 200) {
+          callback();
+        } else {
+          console.log(response.status);
+        }
+      })
+      .catch((err) => {
+        console.log("Error delete classroom:" + err);
+      });
+  }
+}
+
 export function getClassrooms(searchVal, callback) {
   if (localStorage.getItem("sessionId")) {
-    fetch(`https://127.0.0.1:8000/api/classroom/?searchVal=${searchVal}`, {
+    fetch(`${symfonyApiEndpoint}/classroom/?searchVal=${searchVal}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -48,7 +93,7 @@ export function getClassrooms(searchVal, callback) {
 
 export function getClassDetail(classId, callback) {
   if (localStorage.getItem("sessionId")) {
-    fetch(`https://127.0.0.1:8000/api/classroom/${classId}`, {
+    fetch(`${symfonyApiEndpoint}/classroom/${classId}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -74,7 +119,7 @@ export function getClassDetail(classId, callback) {
 
 export function joinClass(classId, callback) {
   if (localStorage.getItem("sessionId")) {
-    fetch(`https://127.0.0.1:8000/api/classroom/${classId}/student`, {
+    fetch(`${symfonyApiEndpoint}/classroom/${classId}/student`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -95,7 +140,7 @@ export function joinClass(classId, callback) {
 
 export function getStudentList(classId, callback) {
   if (localStorage.getItem("sessionId")) {
-    fetch(`https://127.0.0.1:8000/api/classroom/${classId}/student`, {
+    fetch(`${symfonyApiEndpoint}/classroom/${classId}/student`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -122,16 +167,13 @@ export function getStudentList(classId, callback) {
 // (remove student)
 export function unjoinClass(classId, studentId, callback) {
   if (localStorage.getItem("sessionId")) {
-    fetch(
-      `https://127.0.0.1:8000/api/classroom/${classId}/student/${studentId}`,
-      {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          sessionId: localStorage.getItem("sessionId"),
-        },
-      }
-    )
+    fetch(`${symfonyApiEndpoint}/classroom/${classId}/student/${studentId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        sessionId: localStorage.getItem("sessionId"),
+      },
+    })
       .then((response) => {
         // 200: ok
         if (response.status === 200) {
