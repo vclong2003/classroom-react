@@ -4,6 +4,7 @@
   padding-top: 20px;
   padding-bottom: 50px;
 }
+
 .header {
   display: flex;
   flex-direction: row;
@@ -15,6 +16,25 @@
   font-size: 20px;
   cursor: pointer;
 }
+.updatePopup {
+  background-color: #f7f8ff;
+  border-radius: 20px;
+}
+.updatePopupInput {
+  border-radius: 20px;
+  margin-bottom: 8px;
+}
+.updatePopupBtn {
+  border-radius: 18px;
+  background-color: #58668c;
+  font-size: 14px;
+  border: none;
+  outline: none;
+  padding-left: 20px;
+  padding-right: 20px;
+  margin-right: 4px;
+}
+
 .className {
   font-size: 35px;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;

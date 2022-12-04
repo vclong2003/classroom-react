@@ -6,6 +6,7 @@ import {
   Col,
   Container,
   Dropdown,
+  Form,
   Image,
   Modal,
   Row,
@@ -25,6 +26,7 @@ import {
   getClassDetail,
   removeClassroom,
   unjoinClass,
+  updateClassroom,
 } from "../../Services/SymfonyApi/ClassHandler";
 import { readableDateTimeConvert } from "../../Components/ReadableDateTimeConverter";
 import { getPosts } from "../../Services/SymfonyApi/PostHandler";
@@ -68,24 +70,10 @@ export default function ClassDetail({ classListRefresher }) {
   });
   const [postList, setPostList] = useState([]);
   const [teacherInfoModalVisible, setTeacherInfoModalVisible] = useState(false);
-  const [renamePopupVisible, setRenamePopupVisible] = useState(false);
+  const [removePopupVisible, setRemovePopupVisible] = useState(false);
+  const [updatePopupVisible, setUpdatePopupVisible] = useState(false);
   const [classDetailLoading, setClassDetailLoading] = useState(false);
   const [postLoading, setPostLoading] = useState(false);
-
-  const customDropdownTriggerBtn = forwardRef(({ children, onClick }, ref) => {
-    return (
-      <div
-        className={styles.customDropdownTriggerBtn}
-        ref={ref}
-        onClick={(e) => {
-          e.preventDefault();
-          onClick(e);
-        }}
-      >
-        {children}
-      </div>
-    );
-  });
 
   const fetchClassDetail = () => {
     setClassDetailLoading(true);
@@ -118,13 +106,65 @@ export default function ClassDetail({ classListRefresher }) {
   const handleAddPostBtn = () => {
     navigate("post/add");
   };
-  const handleUpdateClassBtn = () => {};
   const handleRemoveClass = () => {
     removeClassroom(classId, () => {
       classListRefresher();
       navigate(-1);
     });
   };
+
+  const customDropdownTriggerBtn = forwardRef(({ children, onClick }, ref) => {
+    return (
+      <div
+        className={styles.customDropdownTriggerBtn}
+        ref={ref}
+        onClick={(e) => {
+          e.preventDefault();
+          onClick(e);
+        }}
+      >
+        {children}
+      </div>
+    );
+  });
+
+  function UpdateClassInfoPopup() {
+    const [name, setName] = useState(classInfo.name);
+
+    const handleSave = () => {
+      updateClassroom(classId, name, () => {
+        setUpdatePopupVisible(false);
+        fetchClassDetail();
+        classListRefresher();
+      });
+    };
+    const handleCancle = () => {
+      setUpdatePopupVisible(false);
+    };
+
+    return (
+      <Modal show={updatePopupVisible} onHide={handleCancle}>
+        <Modal.Body className={styles.updatePopup}>
+          <Form.Control
+            type="text"
+            value={name}
+            onChange={(evt) => {
+              setName(evt.target.value);
+            }}
+            className={styles.updatePopupInput}
+          />
+          <div>
+            <Button className={styles.updatePopupBtn} onClick={handleSave}>
+              Save
+            </Button>
+            <Button className={styles.updatePopupBtn} onClick={handleCancle}>
+              Cancel
+            </Button>
+          </div>
+        </Modal.Body>
+      </Modal>
+    );
+  }
 
   useEffect(() => {
     fetchClassDetail();
@@ -146,10 +186,16 @@ export default function ClassDetail({ classListRefresher }) {
                       <i className="bi bi-three-dots-vertical"></i>
                     </Dropdown.Toggle>
                     <Dropdown.Menu>
-                      <Dropdown.Item>Rename</Dropdown.Item>
                       <Dropdown.Item
                         onClick={() => {
-                          setRenamePopupVisible(true);
+                          setUpdatePopupVisible(true);
+                        }}
+                      >
+                        Rename
+                      </Dropdown.Item>
+                      <Dropdown.Item
+                        onClick={() => {
+                          setRemovePopupVisible(true);
                         }}
                       >
                         Remove this class
@@ -157,13 +203,14 @@ export default function ClassDetail({ classListRefresher }) {
                     </Dropdown.Menu>
                   </Dropdown>
                   <ConfirmationPopup
-                    visible={renamePopupVisible}
+                    visible={removePopupVisible}
                     message="Do you really want to remove this class?"
                     handleClose={() => {
-                      setRenamePopupVisible(false);
+                      setRemovePopupVisible(false);
                     }}
                     handleConfirm={handleRemoveClass}
                   />
+                  <UpdateClassInfoPopup />
                 </div>
                 <ProtectedContent></ProtectedContent>
               </Container>
