@@ -180,7 +180,8 @@ export default function ClassDetail({ classListRefresher }) {
             <Container fluid className={styles.container}>
               <Container className={styles.header}>
                 <div className={styles.className}>{classInfo.name}</div>
-                <div>
+
+                <ProtectedContent>
                   <Dropdown>
                     <Dropdown.Toggle as={customDropdownTriggerBtn}>
                       <i className="bi bi-three-dots-vertical"></i>
@@ -211,8 +212,7 @@ export default function ClassDetail({ classListRefresher }) {
                     handleConfirm={handleRemoveClass}
                   />
                   <UpdateClassInfoPopup />
-                </div>
-                <ProtectedContent></ProtectedContent>
+                </ProtectedContent>
               </Container>
               {classDetailLoading ? (
                 <LoadingSpinner />
