@@ -1,5 +1,7 @@
+import { symfonyApiEndpoint } from "../config";
+
 export function register(name, email, password, registeredCallback) {
-  fetch("https://127.0.0.1:8000/api/auth/register", {
+  fetch(`${symfonyApiEndpoint}/auth/register`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -21,7 +23,7 @@ export function register(name, email, password, registeredCallback) {
 }
 
 export function login(email, password) {
-  fetch("https://127.0.0.1:8000/api/auth/login", {
+  fetch(`${symfonyApiEndpoint}/auth/login`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -52,7 +54,7 @@ export function logout() {
 //get verify the sessionId and get role
 export function getRole(callback) {
   if (localStorage.getItem("sessionId")) {
-    fetch("https://127.0.0.1:8000/api/auth/role", {
+    fetch(`${symfonyApiEndpoint}/auth/role`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

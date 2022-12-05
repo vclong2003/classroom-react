@@ -1,6 +1,8 @@
+import { symfonyApiEndpoint } from "../config";
+
 export function addAttendanceRecord(classId, attendanceData, callback) {
   if (localStorage.getItem("sessionId")) {
-    fetch(`https://127.0.0.1:8000/api/classroom/${classId}/classSession`, {
+    fetch(`${symfonyApiEndpoint}/classroom/${classId}/classSession`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -23,7 +25,7 @@ export function addAttendanceRecord(classId, attendanceData, callback) {
 
 export function getAttendanceGroup(classId, callback) {
   if (localStorage.getItem("sessionId")) {
-    fetch(`https://127.0.0.1:8000/api/classroom/${classId}/classSession`, {
+    fetch(`${symfonyApiEndpoint}/classroom/${classId}/classSession`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -51,7 +53,7 @@ export function getAttendanceGroup(classId, callback) {
 export function getAttendances(classId, classSessionId, callback) {
   if (localStorage.getItem("sessionId")) {
     fetch(
-      `https://127.0.0.1:8000/api/classroom/${classId}/classSession/${classSessionId}/attendances`,
+      `${symfonyApiEndpoint}/classroom/${classId}/classSession/${classSessionId}/attendances`,
       {
         method: "GET",
         headers: {
@@ -81,7 +83,7 @@ export function getAttendances(classId, classSessionId, callback) {
 export function getAttendanceSummerization(classId, callback) {
   if (localStorage.getItem("sessionId")) {
     fetch(
-      `https://127.0.0.1:8000/api/classroom/${classId}/adtendanceSummarization`,
+      `${symfonyApiEndpoint}/classroom/${classId}/adtendanceSummarization`,
       {
         method: "GET",
         headers: {

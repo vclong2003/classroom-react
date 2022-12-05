@@ -1,6 +1,8 @@
+import { symfonyApiEndpoint } from "../config";
+
 export function getUserInfo(callback) {
   if (localStorage.getItem("sessionId")) {
-    fetch("https://127.0.0.1:8000/api/user", {
+    fetch(`${symfonyApiEndpoint}/user`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -35,7 +37,7 @@ export function updateUserInfo(
   callback
 ) {
   if (localStorage.getItem("sessionId")) {
-    fetch("https://127.0.0.1:8000/api/user", {
+    fetch(`${symfonyApiEndpoint}/user`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

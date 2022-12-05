@@ -1,7 +1,9 @@
+import { symfonyApiEndpoint } from "../config";
+
 export function getAllAsm(classId, postId, callback) {
   if (localStorage.getItem("sessionId")) {
     fetch(
-      `https://127.0.0.1:8000/api/classroom/${classId}/post/${postId}/assignment`,
+      `${symfonyApiEndpoint}/classroom/${classId}/post/${postId}/assignment`,
       {
         method: "GET",
         headers: {
@@ -31,7 +33,7 @@ export function getAllAsm(classId, postId, callback) {
 export function getSingleAsm(classId, postId, asmId, callback) {
   if (localStorage.getItem("sessionId")) {
     fetch(
-      `https://127.0.0.1:8000/api/classroom/${classId}/post/${postId}/assignment/${asmId}`,
+      `${symfonyApiEndpoint}/classroom/${classId}/post/${postId}/assignment/${asmId}`,
       {
         method: "GET",
         headers: {
@@ -61,7 +63,7 @@ export function getSingleAsm(classId, postId, asmId, callback) {
 export function addAsm(classId, postId, asmFileUrl, callback) {
   if (localStorage.getItem("sessionId")) {
     fetch(
-      `https://127.0.0.1:8000/api/classroom/${classId}/post/${postId}/assignment`,
+      `${symfonyApiEndpoint}/classroom/${classId}/post/${postId}/assignment`,
       {
         method: "POST",
         headers: {
@@ -92,7 +94,7 @@ export function addAsm(classId, postId, asmFileUrl, callback) {
 export function updateAsm(classId, postId, asmId, asmFileUrl, callback) {
   if (localStorage.getItem("sessionId")) {
     fetch(
-      `https://127.0.0.1:8000/api/classroom/${classId}/post/${postId}/assignment/${asmId}`,
+      `${symfonyApiEndpoint}/classroom/${classId}/post/${postId}/assignment/${asmId}`,
       {
         method: "POST",
         headers: {
@@ -118,7 +120,7 @@ export function updateAsm(classId, postId, asmId, asmFileUrl, callback) {
 export function deleteAsm(classId, postId, asmId, callback) {
   if (localStorage.getItem("sessionId")) {
     fetch(
-      `https://127.0.0.1:8000/api/classroom/${classId}/post/${postId}/assignment/${asmId}`,
+      `${symfonyApiEndpoint}/classroom/${classId}/post/${postId}/assignment/${asmId}`,
       {
         method: "DELETE",
         headers: {
@@ -143,7 +145,7 @@ export function deleteAsm(classId, postId, asmId, callback) {
 export function setAsmMark(classId, postId, asmId, asmMark, callback) {
   if (localStorage.getItem("sessionId")) {
     fetch(
-      `https://127.0.0.1:8000/api/classroom/${classId}/post/${postId}/assignment/${asmId}/mark`,
+      `${symfonyApiEndpoint}/classroom/${classId}/post/${postId}/assignment/${asmId}/mark`,
       {
         method: "POST",
         headers: {

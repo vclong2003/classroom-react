@@ -1,6 +1,8 @@
+import { symfonyApiEndpoint } from "../config";
+
 export function getPosts(classId, callback) {
   if (localStorage.getItem("sessionId")) {
-    fetch(`https://127.0.0.1:8000/api/classroom/${classId}/post`, {
+    fetch(`${symfonyApiEndpoint}/classroom/${classId}/post`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -26,7 +28,7 @@ export function getPosts(classId, callback) {
 
 export function getSinglePost(classId, postId, callback) {
   if (localStorage.getItem("sessionId")) {
-    fetch(`https://127.0.0.1:8000/api/classroom/${classId}/post/${postId}`, {
+    fetch(`${symfonyApiEndpoint}/classroom/${classId}/post/${postId}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -54,7 +56,7 @@ export function getSinglePost(classId, postId, callback) {
 
 export function addPost(classId, isAsm, postContent, callback) {
   if (localStorage.getItem("sessionId")) {
-    fetch(`https://127.0.0.1:8000/api/classroom/${classId}/post`, {
+    fetch(`${symfonyApiEndpoint}/classroom/${classId}/post`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -78,7 +80,7 @@ export function addPost(classId, isAsm, postContent, callback) {
 
 export function updatePost(classId, postId, isAsm, postContent, callback) {
   if (localStorage.getItem("sessionId")) {
-    fetch(`https://127.0.0.1:8000/api/classroom/${classId}/post/${postId}`, {
+    fetch(`${symfonyApiEndpoint}/classroom/${classId}/post/${postId}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -102,7 +104,7 @@ export function updatePost(classId, postId, isAsm, postContent, callback) {
 
 export function deletePost(classId, postId, callback) {
   if (localStorage.getItem("sessionId")) {
-    fetch(`https://127.0.0.1:8000/api/classroom/${classId}/post/${postId}`, {
+    fetch(`${symfonyApiEndpoint}/classroom/${classId}/post/${postId}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
