@@ -180,7 +180,6 @@ export default function ClassDetail({ classListRefresher }) {
             <Container fluid className={styles.container}>
               <Container className={styles.header}>
                 <div className={styles.className}>{classInfo.name}</div>
-
                 <ProtectedContent>
                   <Dropdown>
                     <Dropdown.Toggle as={customDropdownTriggerBtn}>
