@@ -1,4 +1,5 @@
 import { symfonyApiEndpoint } from "../config";
+import { logout } from "./AuthHandler";
 
 export function addClassroom(classroomName, callback) {
   if (localStorage.getItem("sessionId")) {
@@ -14,6 +15,10 @@ export function addClassroom(classroomName, callback) {
         // 201: created
         if (response.status === 201) {
           callback();
+        } else if (response.status === 401) {
+          logout();
+        } else {
+          console.log(response.status);
         }
       })
       .catch((err) => {
@@ -35,6 +40,10 @@ export function updateClassroom(classId, classroomName, callback) {
       .then((response) => {
         if (response.status === 200) {
           callback();
+        } else if (response.status === 401) {
+          logout();
+        } else {
+          console.log(response.status);
         }
       })
       .catch((err) => {
@@ -55,6 +64,8 @@ export function removeClassroom(classId, callback) {
       .then((response) => {
         if (response.status === 200) {
           callback();
+        } else if (response.status === 401) {
+          logout();
         } else {
           console.log(response.status);
         }
@@ -78,6 +89,10 @@ export function getClassrooms(searchVal, callback) {
         // 200: ok
         if (response.status === 200) {
           return response.json();
+        } else if (response.status === 401) {
+          logout();
+        } else {
+          console.log(response.status);
         }
       })
       .then((data) => {
@@ -104,6 +119,10 @@ export function getClassDetail(classId, callback) {
         // 200: ok
         if (response.status === 200) {
           return response.json();
+        } else if (response.status === 401) {
+          logout();
+        } else {
+          console.log(response.status);
         }
       })
       .then((data) => {
@@ -130,6 +149,10 @@ export function joinClass(classId, callback) {
         // 200: ok
         if (response.status === 200) {
           callback();
+        } else if (response.status === 401) {
+          logout();
+        } else {
+          console.log(response.status);
         }
       })
       .catch((err) => {
@@ -151,6 +174,10 @@ export function getStudentList(classId, callback) {
         // 200: ok
         if (response.status === 200) {
           return response.json();
+        } else if (response.status === 401) {
+          logout();
+        } else {
+          console.log(response.status);
         }
       })
       .then((data) => {
@@ -178,6 +205,8 @@ export function unjoinClass(classId, studentId, callback) {
         // 200: ok
         if (response.status === 200) {
           callback();
+        } else if (response.status === 401) {
+          logout();
         } else {
           console.log(response.status);
         }

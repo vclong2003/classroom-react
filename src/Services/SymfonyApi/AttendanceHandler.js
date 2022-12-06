@@ -1,4 +1,5 @@
 import { symfonyApiEndpoint } from "../config";
+import { logout } from "./AuthHandler";
 
 export function addAttendanceRecord(classId, attendanceData, callback) {
   if (localStorage.getItem("sessionId")) {
@@ -13,6 +14,8 @@ export function addAttendanceRecord(classId, attendanceData, callback) {
       .then((response) => {
         if (response.status === 201) {
           callback();
+        } else if (response.status === 401) {
+          logout();
         } else {
           console.log(response.status);
         }
@@ -35,6 +38,8 @@ export function getAttendanceGroup(classId, callback) {
       .then((response) => {
         if (response.status === 200) {
           return response.json();
+        } else if (response.status === 401) {
+          logout();
         } else {
           console.log(response.status);
         }
@@ -65,6 +70,8 @@ export function getAttendances(classId, classSessionId, callback) {
       .then((response) => {
         if (response.status === 200) {
           return response.json();
+        } else if (response.status === 401) {
+          logout();
         } else {
           console.log(response.status);
         }
@@ -95,6 +102,8 @@ export function getAttendanceSummerization(classId, callback) {
       .then((response) => {
         if (response.status === 200) {
           return response.json();
+        } else if (response.status === 401) {
+          logout();
         } else {
           console.log(response.status);
         }

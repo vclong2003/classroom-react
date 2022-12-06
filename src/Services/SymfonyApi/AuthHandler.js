@@ -51,7 +51,7 @@ export function logout() {
   window.location.href = "/";
 }
 
-//get verify the sessionId and get role
+//Verify the sessionId and get role
 export function getRole(callback) {
   if (localStorage.getItem("sessionId")) {
     fetch(`${symfonyApiEndpoint}/auth/role`, {
@@ -62,7 +62,7 @@ export function getRole(callback) {
       },
     })
       .then((response) => {
-        // 202: verified, 406: not verified
+        // 202: verified, 401: not verified
         if (response.status === 202) {
           return response.json();
         } else {

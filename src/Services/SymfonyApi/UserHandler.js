@@ -1,4 +1,5 @@
 import { symfonyApiEndpoint } from "../config";
+import { logout } from "./AuthHandler";
 
 export function getUserInfo(callback) {
   if (localStorage.getItem("sessionId")) {
@@ -10,9 +11,10 @@ export function getUserInfo(callback) {
       },
     })
       .then((response) => {
-        // 200: ok
         if (response.status === 200) {
           return response.json();
+        } else if (response.status === 401) {
+          logout();
         } else {
           console.log(response.status);
         }
@@ -52,9 +54,10 @@ export function updateUserInfo(
       }),
     })
       .then((response) => {
-        // 200: ok
         if (response.status === 200) {
           callback();
+        } else if (response.status === 401) {
+          logout();
         } else {
           console.log(response.status);
         }

@@ -1,4 +1,5 @@
 import { symfonyApiEndpoint } from "../config";
+import { logout } from "./AuthHandler";
 
 export function getAllAsm(classId, postId, callback) {
   if (localStorage.getItem("sessionId")) {
@@ -15,6 +16,8 @@ export function getAllAsm(classId, postId, callback) {
       .then((response) => {
         if (response.status === 200) {
           return response.json();
+        } else if (response.status === 401) {
+          logout();
         } else {
           console.log(response.status);
         }
@@ -45,6 +48,8 @@ export function getSingleAsm(classId, postId, asmId, callback) {
       .then((response) => {
         if (response.status === 200) {
           return response.json();
+        } else if (response.status === 401) {
+          logout();
         } else {
           console.log(response.status);
         }
@@ -76,6 +81,8 @@ export function addAsm(classId, postId, asmFileUrl, callback) {
       .then((response) => {
         if (response.status === 201) {
           return response.json();
+        } else if (response.status === 401) {
+          logout();
         } else {
           console.log(response.status);
         }
@@ -107,6 +114,8 @@ export function updateAsm(classId, postId, asmId, asmFileUrl, callback) {
       .then((response) => {
         if (response.status === 200) {
           callback();
+        } else if (response.status === 401) {
+          logout();
         } else {
           console.log(response.status);
         }
@@ -132,6 +141,8 @@ export function deleteAsm(classId, postId, asmId, callback) {
       .then((response) => {
         if (response.status === 200) {
           callback();
+        } else if (response.status === 401) {
+          logout();
         } else {
           console.log(response.status);
         }
@@ -158,6 +169,8 @@ export function setAsmMark(classId, postId, asmId, asmMark, callback) {
       .then((response) => {
         if (response.status === 200) {
           callback();
+        } else if (response.status === 401) {
+          logout();
         } else {
           console.log(response.status);
         }

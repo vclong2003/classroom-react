@@ -1,4 +1,5 @@
 import { symfonyApiEndpoint } from "../config";
+import { logout } from "./AuthHandler";
 
 export function getPosts(classId, callback) {
   if (localStorage.getItem("sessionId")) {
@@ -13,6 +14,10 @@ export function getPosts(classId, callback) {
         // 200: ok
         if (response.status === 200) {
           return response.json();
+        } else if (response.status === 401) {
+          logout();
+        } else {
+          console.log(response.status);
         }
       })
       .then((data) => {
@@ -39,6 +44,8 @@ export function getSinglePost(classId, postId, callback) {
         // 200: ok
         if (response.status === 200) {
           return response.json();
+        } else if (response.status === 401) {
+          logout();
         } else {
           console.log(response.status);
         }
@@ -68,6 +75,8 @@ export function addPost(classId, isAsm, postContent, callback) {
         // 201: added
         if (response.status === 201) {
           callback();
+        } else if (response.status === 401) {
+          logout();
         } else {
           console.log(response.status);
         }
@@ -92,6 +101,8 @@ export function updatePost(classId, postId, isAsm, postContent, callback) {
         // 200: ok
         if (response.status === 200) {
           callback();
+        } else if (response.status === 401) {
+          logout();
         } else {
           console.log(response.status);
         }
@@ -115,6 +126,8 @@ export function deletePost(classId, postId, callback) {
         // 200: ok
         if (response.status === 200) {
           callback();
+        } else if (response.status === 401) {
+          logout();
         } else {
           console.log(response.status);
         }
