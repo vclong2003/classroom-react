@@ -18,8 +18,15 @@
 .teacherInfoContainer {
   position: absolute;
   bottom: -20px;
+  display: flex;
   justify-content: flex-start;
   align-items: center;
+  flex-direction: row;
+  width: 100%;
+}
+.teacherImgContainer {
+  width: 28%;
+  margin-right: 2%;
 }
 .teacherName {
   font-size: 16px;

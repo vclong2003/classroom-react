@@ -1,6 +1,6 @@
 import styles from "./classroomItemStyle.module.css";
 import Badge from "react-bootstrap/Badge";
-import { Col, Container, Row } from "react-bootstrap";
+import { Col, Container, Ratio, Row } from "react-bootstrap";
 import { motion } from "framer-motion";
 import randomColor from "random-color";
 import { readableDateTimeConvert } from "../../Components/ReadableDateTimeConverter";
@@ -53,14 +53,12 @@ export default function ClassroomItem({
             backgroundColor: color.hexString(),
           }}
         >
-          <Row className={styles.teacherInfoContainer}>
-            <Col xl={4} xxl={4}>
+          <div className={styles.teacherInfoContainer}>
+            <div className={styles.teacherImgContainer}>
               <AvatarItem source={data.teacherImageUrl} />
-            </Col>
-            <Col xl={8} xxl={8} className={styles.teacherName}>
-              {data.teacherName}
-            </Col>
-          </Row>
+            </div>
+            <div className={styles.teacherName}>{data.teacherName}</div>
+          </div>
         </Container>
         <Container fluid className={styles.body}>
           <Container className={styles.className}>
