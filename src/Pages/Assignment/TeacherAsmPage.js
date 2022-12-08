@@ -1,13 +1,5 @@
 import styles from "./teacherPageStyle.module.css";
-import {
-  Button,
-  Col,
-  Container,
-  Form,
-  Image,
-  Ratio,
-  Row,
-} from "react-bootstrap";
+import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import {
   getAllAsm,
@@ -96,9 +88,7 @@ function AsmItem({
     <Container className={styles.asmItem}>
       <Row className={styles.studentInfoContainer}>
         <Col xl={2} xxl={2}>
-          <Ratio aspectRatio="1x1">
-            <AvatarItem source={data.userImageUrl} />
-          </Ratio>
+          <AvatarItem source={data.userImageUrl} />
         </Col>
         <Col xl={10} xxl={10} className={styles.studentName}>
           <div>{data.userName}</div>

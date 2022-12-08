@@ -7,7 +7,6 @@ import {
   Form,
   Modal,
   Nav,
-  Ratio,
   Tab,
 } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
@@ -155,9 +154,7 @@ export default function AttendancePage() {
     return (
       <Container className={styles.studentItem}>
         <div className={styles.studentAvatarContainer}>
-          <Ratio aspectRatio="1x1">
-            <AvatarItem source={studentData.imageUrl} />
-          </Ratio>
+          <AvatarItem source={studentData.imageUrl} />
         </div>
         <div className={styles.studentName}>{studentData.name}</div>
         <div className={styles.attendanceContainer}>

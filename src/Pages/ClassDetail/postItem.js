@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { Badge, Button, Container, Modal } from "react-bootstrap";
+import { Badge, Button, Container } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import { RoleContext } from "../..";
 import ConfirmationPopup from "../../Components/ComfirmationPopup";

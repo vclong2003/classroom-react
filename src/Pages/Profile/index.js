@@ -1,12 +1,5 @@
 import styles from "./style.module.css";
-import {
-  Badge,
-  Button,
-  Container,
-  Form,
-  Modal,
-  Ratio,
-} from "react-bootstrap";
+import { Badge, Button, Container, Form, Modal, Ratio } from "react-bootstrap";
 import { useContext, useEffect, useState } from "react";
 import {
   getUserInfo,

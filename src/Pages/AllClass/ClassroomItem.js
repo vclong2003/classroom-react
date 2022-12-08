@@ -1,6 +1,6 @@
 import styles from "./classroomItemStyle.module.css";
 import Badge from "react-bootstrap/Badge";
-import { Col, Container, Ratio, Row } from "react-bootstrap";
+import { Container } from "react-bootstrap";
 import { motion } from "framer-motion";
 import randomColor from "random-color";
 import { readableDateTimeConvert } from "../../Components/ReadableDateTimeConverter";

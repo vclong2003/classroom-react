@@ -1,5 +1,5 @@
 import styles from "./studentPageStyle.module.css";
-import { Container, Image, Ratio } from "react-bootstrap";
+import { Container, Ratio } from "react-bootstrap";
 import { getStudentList } from "../../Services/SymfonyApi/ClassHandler";
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -27,9 +27,9 @@ export default function StudentAllMemberPage() {
     <Container fluid className={styles.container}>
       <Container className={styles.sectionTitle}>Teacher</Container>
       <Container className={styles.teacherItem}>
-        <Ratio aspectRatio="1x1" className={styles.teacherImgContainer}>
+        <div className={styles.teacherImgContainer}>
           <AvatarItem source={classInfo.teacherImageUrl} />
-        </Ratio>
+        </div>
         <div>
           <Container>
             <span className={styles.teacherFieldTitle}>Name: </span>
@@ -69,9 +69,9 @@ function StudentItem({
   return (
     <Container className={styles.studentItem}>
       <Container className={styles.studentInfoContainer}>
-        <Ratio aspectRatio="1x1" className={styles.studentImgContainer}>
+        <div className={styles.studentImgContainer}>
           <AvatarItem source={data.imageUrl} />
-        </Ratio>
+        </div>
         <div className={styles.studentName}>{data.name}</div>
       </Container>
       <Container>

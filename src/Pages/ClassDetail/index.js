@@ -7,7 +7,6 @@ import {
   Container,
   Dropdown,
   Form,
-  Image,
   Modal,
   Row,
 } from "react-bootstrap";
