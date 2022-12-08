@@ -67,3 +67,30 @@ export function updateUserInfo(
       });
   }
 }
+
+export function setUserRole(role, callback) {
+  if (localStorage.getItem("sessionId")) {
+    fetch(`${symfonyApiEndpoint}/user/role`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        sessionId: localStorage.getItem("sessionId"),
+      },
+      body: JSON.stringify({
+        role: role,
+      }),
+    })
+      .then((response) => {
+        if (response.status === 200) {
+          callback();
+        } else if (response.status === 401) {
+          logout();
+        } else {
+          console.log(response.status);
+        }
+      })
+      .catch((err) => {
+        console.log("Error set role: " + err);
+      });
+  }
+}

@@ -6,11 +6,16 @@ import NavDropdown from "react-bootstrap/NavDropdown";
 import { logout } from "../../Services/SymfonyApi/AuthHandler";
 import { Button, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { getUserInfo } from "../../Services/SymfonyApi/UserHandler";
+import { useContext, useEffect, useState } from "react";
+import {
+  getUserInfo,
+  setUserRole,
+} from "../../Services/SymfonyApi/UserHandler";
+import { RoleContext } from "../..";
 
 export default function NavBar() {
   const navigate = useNavigate();
+  const role = useContext(RoleContext);
   const [userName, setUserName] = useState(null);
 
   useEffect(() => {
@@ -18,6 +23,12 @@ export default function NavBar() {
       setUserName(data.name);
     });
   }, []);
+
+  const handleSwitchRole = () => {
+    setUserRole(role === "teacher" ? "student" : "teacher", () => {
+      window.location.href = "/";
+    });
+  };
 
   return (
     <Navbar expand="lg" variant="dark" className={styles.navBar}>
@@ -46,6 +57,9 @@ export default function NavBar() {
                   }}
                 >
                   Profile
+                </NavDropdown.Item>
+                <NavDropdown.Item onClick={handleSwitchRole}>
+                  Change to {role === "teacher" ? "Student" : "Teacher"}
                 </NavDropdown.Item>
                 <NavDropdown.Divider />
                 <NavDropdown.Item
