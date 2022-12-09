@@ -254,7 +254,7 @@ function InfoEditor({ initValue, visible, handleClose, handleUpdate }) {
             />
           </Form.Group>
           <Button type="submit" className={styles.editInfoBtn}>
-            Update
+            Save
           </Button>
           <Button className={styles.editInfoBtn} onClick={handleCancel}>
             Cancel
