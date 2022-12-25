@@ -69,13 +69,15 @@ function AsmItem({
   const [loading, setLoading] = useState(false);
 
   const handleSetMarkBtn = () => {
-    if (markInput) {
-      setLoading(true);
-      setAsmMark(classId, postId, data.id, markInput, () => {
-        setMark(markInput);
-        setLoading(false);
-      });
+    if (!markInput || markInput < 0 || markInput > 10) {
+      alert("Invalid mark!");
+      return;
     }
+    setLoading(true);
+    setAsmMark(classId, postId, data.id, markInput, () => {
+      setMark(markInput);
+      setLoading(false);
+    });
   };
 
   useEffect(() => {
@@ -108,7 +110,7 @@ function AsmItem({
       </Container>
       <Container className={styles.asmItemMark}>
         <span className={styles.asmFieldTitle}>Mark:</span>{" "}
-        {mark ? mark : "not set"}
+        {mark == null ? "not set" : mark}
       </Container>
       <Container className={styles.setMarkForm}>
         <Form.Control
