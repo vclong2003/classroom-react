@@ -4,7 +4,6 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import { logout } from "../../Services/SymfonyApi/AuthHandler";
-import { Button, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import {

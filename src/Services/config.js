@@ -11,3 +11,10 @@ export const firebaseConfig = {
 
 // Symfony API
 export const symfonyApiEndpoint = "https://127.0.0.1:8000/api";
+
+
+
+
+
+
+
