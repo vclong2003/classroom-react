@@ -1,70 +1,34 @@
-# Getting Started with Create React App
+# React for the Class Management website
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Login page
+![image](https://github.com/vclong2003/classroom-react-webg301/assets/53139311/cdd0e9d9-ac00-4994-bf35-d9be2a251257)
 
-## Available Scripts
+Register page
+![image](https://github.com/vclong2003/classroom-react-webg301/assets/53139311/2bdd8c2d-b117-4f44-9f99-23ab255bfb7b)
 
-In the project directory, you can run:
+All classes page
+![image](https://github.com/vclong2003/classroom-react-webg301/assets/53139311/bf7ab714-e856-4242-8d00-02028572ee10)
 
-### `npm start`
+Class detail page
+![image](https://github.com/vclong2003/classroom-react-webg301/assets/53139311/a1e19f19-68ea-4362-a379-83e6c4d135d2)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Class members page
+![image](https://github.com/vclong2003/classroom-react-webg301/assets/53139311/7e532602-23a2-463a-b2fc-d964d057dd36)
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Take attendance page
+![image](https://github.com/vclong2003/classroom-react-webg301/assets/53139311/635c076d-db3d-4d43-99ec-6194b52ebc87)
 
-### `npm test`
+View attendance
+![image](https://github.com/vclong2003/classroom-react-webg301/assets/53139311/c72a0672-c192-4def-84bd-18322f746561)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+View attendance history
+![image](https://github.com/vclong2003/classroom-react-webg301/assets/53139311/eadcda97-bac4-4d1e-b9d9-b5f009b21a62)
 
-### `npm run build`
+Add post to a class
+![image](https://github.com/vclong2003/classroom-react-webg301/assets/53139311/8807664a-8e66-4a3d-9260-14119665d959)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+View a post's submissions
+![image](https://github.com/vclong2003/classroom-react-webg301/assets/53139311/d87a1985-605b-431e-acde-3b3ed60debf3)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Assignment submit page (student only)
+![image](https://github.com/vclong2003/classroom-react-webg301/assets/53139311/a3f19aba-0f03-4c6c-ab56-90f0b8e3a2d2)
